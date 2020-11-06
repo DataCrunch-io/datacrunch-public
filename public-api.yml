@@ -12,20 +12,20 @@ servers:
 security:
   - bearer: []
 tags:
-  - name: instance
+  - name: Instance
     description: a datacrunch server instance
-  - name: ssh key
+  - name: SSH key
     description: ssh keys for your instances
-  - name: startup script
+  - name: Startup Script
     description: startup scripts that execute when an instance is deployed
-  - name: balance
+  - name: Balance
     description: user balance
   - name: Authentication
 paths:
   /instances:
     get:
       tags:
-        - instance
+        - Instance
       summary: Get all instances
       description: 'Return all instances of the user, or all instances with a specific status (optional)'
       operationId: getAllInstances
@@ -50,7 +50,7 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
     post:
       tags:
-        - instance
+        - Instance
       description: 'Deploy a new instance, or multiple instances'
       operationId: deployInstance
       requestBody:
@@ -120,7 +120,7 @@ paths:
   '/instances/{instanceId}':
     get:
       tags:
-        - instance
+        - Instance
       description: Return instance details by instance id
       operationId: getInstanceById
       parameters:
@@ -146,7 +146,7 @@ paths:
   /instances/action:
     post:
       tags:
-        - instance
+        - Instance
       description: Perform an action on an instance or multiple instances
       operationId: instanceAction
       requestBody:
@@ -189,7 +189,7 @@ paths:
   /sshkeys:
     get:
       tags:
-        - ssh key
+        - SSH key
       description: Return all ssh keys
       operationId: getSshKeys
       responses:
@@ -204,7 +204,7 @@ paths:
       summary: Get ssh keys
     post:
       tags:
-        - ssh key
+        - SSH key
       description: Add a new ssh key
       operationId: addSshKeys
       requestBody:
@@ -238,7 +238,7 @@ paths:
       summary: Add ssh key
     delete:
       tags:
-        - ssh key
+        - SSH key
       description: 'Delete ssh key, or multiple keys'
       operationId: deleteSshKeys
       requestBody:
@@ -262,7 +262,7 @@ paths:
   '/sshKeys/{sshKeyId}':
     get:
       tags:
-        - ssh key
+        - SSH key
       description: Return ssh key by id
       operationId: getSshKeyById
       parameters:
@@ -287,7 +287,7 @@ paths:
       summary: Get ssh key by id
     delete:
       tags:
-        - ssh key
+        - SSH key
       description: delete an ssh key by id
       operationId: deleteSshKeyById
       parameters:
@@ -309,7 +309,7 @@ paths:
   /scripts:
     get:
       tags:
-        - startup script
+        - Startup Script
       description: Return all startup scripts
       operationId: getScripts
       responses:
@@ -324,7 +324,7 @@ paths:
       summary: Get all startup scripts
     post:
       tags:
-        - startup script
+        - Startup Script
       description: Add a new startup script or multiple startup scripts
       operationId: addScripts
       requestBody:
@@ -352,7 +352,7 @@ paths:
       summary: Add startup script
     delete:
       tags:
-        - startup script
+        - Startup Script
       description: Delete a startup script or multiple startup scripts
       operationId: deleteScripts
       requestBody:
@@ -374,7 +374,7 @@ paths:
   '/scripts/{scriptId}':
     get:
       tags:
-        - startup script
+        - Startup Script
       description: Return startup script with specific ID
       operationId: getScriptById
       parameters:
@@ -399,7 +399,7 @@ paths:
       summary: Get startup script by id
     delete:
       tags:
-        - startup script
+        - Startup Script
       description: delete a startup script by id
       operationId: deleteScriptById
       parameters:
@@ -422,7 +422,7 @@ paths:
     get:
       summary: Get account balance
       tags:
-        - balance
+        - Balance
       responses:
         '200':
           description: Returns the account balance
@@ -442,7 +442,7 @@ paths:
   '/availability/{instanceType}':
     get:
       tags:
-        - instance
+        - Instance
       responses:
         '200':
           description: Return instance type availability - true or false
