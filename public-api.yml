@@ -524,6 +524,7 @@ paths:
                       - invalid_request
                       - invalid_scope
                       - unsupported_grant_type
+                      - invalid_grant
                   error_description:
                     type: string
                   error_uri:
