@@ -1,0 +1,716 @@
+openapi: 3.0.2
+info:
+  title: DataCrunch.io Public API
+  version: 1.0.0
+  description: Public API for datacrunch platform
+  contact:
+    name: DataCrunch
+    url: datacrunch.io
+    email: support@datacrunch.io
+servers:
+  - url: 'https://api.datacrunch.io/v1'
+security:
+  - bearer: []
+tags:
+  - name: instance
+    description: a datacrunch server instance
+  - name: ssh key
+    description: ssh keys for your instances
+  - name: startup script
+    description: startup scripts that execute when an instance is deployed
+  - name: balance
+    description: user balance
+paths:
+  /instances:
+    get:
+      tags:
+        - instance
+      summary: Get all instances
+      description: 'Return all instances of the user, or all instances with a specific status (optional)'
+      operationId: getAllInstances
+      parameters:
+        - in: query
+          description: Return all user instances with specific status
+          name: status
+          required: false
+          schema:
+            $ref: '#/components/schemas/InstanceStatus'
+          example: running
+      responses:
+        '200':
+          description: Returns an array of all the user's instances
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Instances'
+        '400':
+          description: Invalid input
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+    post:
+      tags:
+        - instance
+      description: 'Deploy a new instance, or multiple instances'
+      operationId: deployInstance
+      requestBody:
+        description: 'An instance object, or an array of instance objects'
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/DeployInstance'
+                - $ref: '#/components/schemas/DeployInstances'
+            examples:
+              deploy a single instance with single ssh key:
+                summary: 'deploy a single 4V100.20V instance with ubuntu 20.04 os, with single ssh key id, a startup script id'
+                value:
+                  instanceType: 4V100.20V
+                  image: ubuntu-20.04
+                  sshKeyIds: c935afea-1559-4c94-817a-d2c87f7c36cd
+                  startupScriptId: 96ebbbd9-21a9-43cc-a146-6ce9cf59d2b2
+                  hostname: UKKO-5
+                  description: server for running lightning models
+                  location: FIN1
+              deploy a single instance with multiple ssh keys:
+                summary: 'deploy a single 1V100.6V instance with fastai image, with multiple ssh keys ids but no startup script id'
+                value:
+                  instanceType: 1V100.6V
+                  image: fastai
+                  sshKeyIds:
+                    - c935afea-1559-4c94-817a-d2c87f7c36cd
+                    - 0ceddf93-b719-448a-9622-22806f5b7c8a
+                  hostname: OiUkkoYlijumala
+                  description: test instance
+                  location: FIN1
+              deploy multiple instances:
+                summary: deploy multiple instances in one call
+                value:
+                  - instanceType: 8V100.48V
+                    image: ubuntu-18.04
+                    sshKeyIds: c935afea-1559-4c94-817a-d2c87f7c36cd
+                    hostname: Ahti-00
+                    description: calculating water stuff
+                    location: FIN1
+                  - instanceType: 8V100.48V
+                    image: ubuntu-18.04
+                    sshKeyIds: c935afea-1559-4c94-817a-d2c87f7c36cd
+                    hostname: Ahti-01
+                    description: calculating more water stuff
+                    location: FIN1
+      responses:
+        '202':
+          description: 'Accepted, Instance(s) is in process for deployment. Returns an array of the instance(s) id(s)'
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/InstanceId'
+                  - $ref: '#/components/schemas/InstanceIds'
+        '400':
+          description: Invalid input
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '402':
+          description: Not enough balance
+        '503':
+          description: Not enough resources at the moment
+  '/instances/{instanceId}':
+    get:
+      tags:
+        - instance
+      description: Return instance details by instance id
+      operationId: getInstanceById
+      parameters:
+        - name: instanceId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/InstanceId'
+      responses:
+        '200':
+          description: Instance details object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Instance'
+        '400':
+          description: Invalid input
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: Instance was not found
+  /instances/action:
+    post:
+      tags:
+        - instance
+      description: Perform an action on an instance or multiple instances
+      operationId: instanceAction
+      requestBody:
+        description: 'id of instances to perform the action on, and the action type'
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  oneOf:
+                    - $ref: '#/components/schemas/InstanceId'
+                    - $ref: '#/components/schemas/InstanceIds'
+                action:
+                  $ref: '#/components/schemas/ActionType'
+            examples:
+              perform an action on a single instance:
+                summary: perform an action on a single instance
+                value:
+                  id: 26d43424-229e-4b45-bae2-86eb1e919514
+                  action: hibernate
+              perform an action on multiple instances:
+                summary: perform an action on multiple instances
+                value:
+                  id:
+                    - 26d43424-229e-4b45-bae2-86eb1e919514
+                    - d40707e1-b0e0-43d0-a3a6-22457f91f906
+                  action: shutdown
+      responses:
+        '202':
+          description: Action accepted and will be performed
+        '400':
+          description: Invalid input
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: One or more instances were not found
+  /sshkeys:
+    get:
+      tags:
+        - ssh key
+      description: Return all ssh keys
+      operationId: getSshKeys
+      responses:
+        '200':
+          description: Returns an array of ssh key objects
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sshKeys'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+    post:
+      tags:
+        - ssh key
+      description: Add a new ssh key
+      operationId: addSshKeys
+      requestBody:
+        description: ssh key details
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: ssh key name
+                key:
+                  type: string
+                  description: the actual public ssh key value
+            example:
+              name: Ukkos kantele
+              key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC8orN63XfjrkUQUp7cye96/Lx/4gOfs6MzsKLCxX8ACDnXnI9eZkxXuJPr9i6Q+iXNkqcUTB9NyJnfuRx7okPFWvrpzRj3mEs9RZJQ+P3YSfblvxDe2AtRBTZtg2MP0j7afolthS6gdTfhSU+1oRSyvZz0zn0F7TCgem6vNekGLw== tuoni
+      responses:
+        '201':
+          description: 'Key added, returns the internal ssh key id'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sshKeyId'
+        '400':
+          description: Invalid input
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+    delete:
+      tags:
+        - ssh key
+      description: 'Delete ssh key, or multiple keys'
+      operationId: deleteSshKeys
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/sshKeyId'
+                - $ref: '#/components/schemas/sshKeyIds'
+      responses:
+        '200':
+          description: ssh key(s) deleted
+        '400':
+          description: Invalid input
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: ssh key(s) was / were not found
+  '/sshKeys/{sshKeyId}':
+    get:
+      tags:
+        - ssh key
+      description: Return ssh key by id
+      operationId: getSshKeyById
+      parameters:
+        - name: sshKeyId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/sshKeyId'
+      responses:
+        '200':
+          description: 'ssh key found, return key details'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/sshKey'
+        '400':
+          description: Invalid input
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: ssh key was not found
+    delete:
+      tags:
+        - ssh key
+      description: delete an ssh key by id
+      operationId: deleteSshKeyById
+      parameters:
+        - name: sshKeyId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/sshKeyId'
+      responses:
+        '200':
+          description: ssh key deleted
+        '400':
+          description: Invalid input
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: ssh key was not found
+  /scripts:
+    get:
+      tags:
+        - startup script
+      description: Return all startup scripts
+      operationId: getScripts
+      responses:
+        '200':
+          description: an array of startup script objects
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StartupScripts'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+    post:
+      tags:
+        - startup script
+      description: Add a new startup script or multiple startup scripts
+      operationId: addScripts
+      requestBody:
+        description: 'a startup script object, or an array of startup script objects'
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/StartupScript'
+                - $ref: '#/components/schemas/StartupScripts'
+      responses:
+        '200':
+          description: 'startup script(s) added successfully, return id(s) of the new script(s)'
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/StartupScriptId'
+                  - $ref: '#/components/schemas/StartupScriptIds'
+        '400':
+          description: Invalid input
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+    delete:
+      tags:
+        - startup script
+      description: Delete a startup script or multiple startup scripts
+      operationId: deleteScripts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/StartupScriptId'
+                - $ref: '#/components/schemas/StartupScriptIds'
+      responses:
+        '200':
+          description: startup script(s) deleted
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: startup script(s) was / were not found
+  '/scripts/{scriptId}':
+    get:
+      tags:
+        - startup script
+      description: Return startup script with specific ID
+      operationId: getScriptById
+      parameters:
+        - name: scriptId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/StartupScriptId'
+      responses:
+        '200':
+          description: startup script object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StartupScript'
+        '400':
+          description: Invalid input
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: startup script not found
+    delete:
+      tags:
+        - startup script
+      description: delete a startup script by id
+      operationId: deleteScriptById
+      parameters:
+        - name: scriptId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/StartupScriptId'
+      responses:
+        '200':
+          description: startup script deleted
+        '400':
+          description: Invalid input
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: startup script was not found
+  /balance:
+    get:
+      summary: Returns the account balance
+      tags:
+        - balance
+      responses:
+        '200':
+          description: Returns the account balance
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserBalance'
+              examples:
+                50 dollars:
+                  value:
+                    amount: 50
+                    currency: usd
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      operationId: getBalance
+      description: Return account balance
+  '/availability/{instanceType}':
+    get:
+      tags:
+        - instance
+      responses:
+        '200':
+          description: Return instance type availability - true or false
+          content:
+            application/json:
+              schema:
+                type: boolean
+              examples: {}
+        '400':
+          description: Invalid input
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      operationId: getAvailability
+      description: Check if an instance type is available to deploy for the account
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/InstanceType'
+          name: instanceType
+          in: path
+          description: The type of the instance to check
+          required: true
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      description: This API uses OAuth 2 with client credentials flow.
+      flows:
+        clientCredentials:
+          tokenUrl: /oauth2/token
+          scopes:
+            fullAccess: full access to the API
+          refreshUrl: /oauth2/refresh
+    bearer:
+      type: http
+      scheme: bearer
+      description: ''
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid
+  schemas:
+    StartupScriptId:
+      type: string
+      description: startup script id. you need to first add a startup script to datacrunch via the startup script endpoint
+      example: 26d43424-229e-4b45-bae2-86eb1e919514
+    StartupScriptIds:
+      type: array
+      description: array of startup script ids
+      items:
+        $ref: '#/components/schemas/StartupScriptId'
+      example:
+        - 26d43424-229e-4b45-bae2-86eb1e919514
+        - 767066ac-78fb-4b06-bbbf-0bbb37b516c7
+    StartupScript:
+      type: object
+      description: startup script object
+      properties:
+        id:
+          $ref: '#/components/schemas/StartupScriptId'
+        name:
+          type: string
+          description: name of the startup script
+        script:
+          type: string
+          description: the startup script text
+      example:
+        id: de1ab590-892c-4294-9db2-9705049037b3
+        name: download repo
+        script: |-
+          #!/bin/bash
+          # Your sh script here
+    StartupScripts:
+      type: array
+      description: an array of startup script objects
+      items:
+        $ref: '#/components/schemas/StartupScript'
+    sshKeyId:
+      type: string
+      description: ssh key id
+      example: 26d43424-229e-4b45-bae2-86eb1e919514
+    sshKeyIds:
+      type: array
+      description: array of ssh key ids
+      items:
+        $ref: '#/components/schemas/sshKeyId'
+      example:
+        - 26d43424-229e-4b45-bae2-86eb1e919514
+        - 767066ac-78fb-4b06-bbbf-0bbb37b516c7
+    sshKey:
+      type: object
+      description: ssh key object
+      properties:
+        id:
+          $ref: '#/components/schemas/sshKeyId'
+        name:
+          type: string
+          description: ssh key name
+        key:
+          type: string
+          description: the actual public ssh key value
+      example:
+        id: 26d43424-229e-4b45-bae2-86eb1e919514
+        name: Ukkos kantele
+        key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC8orN63XfjrkUQUp7cye96/Lx/4gOfs6MzsKLCxX8ACDnXnI9eZkxXuJPr9i6Q+iXNkqcUTB9NyJnfuRx7okPFWvrpzRj3mEs9RZJQ+P3YSfblvxDe2AtRBTZtg2MP0j7afolthS6gdTfhSU+1oRSyvZz0zn0F7TCgem6vNekGLw== tuoni
+    sshKeys:
+      type: array
+      description: array of ssh key objects
+      items:
+        $ref: '#/components/schemas/sshKey'
+      example:
+        - id: 26d43424-229e-4b45-bae2-86eb1e919514
+          name: Ukkos laptop
+          key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC8orN63XfjrkUQUp7cye96/Lx/4gOfs6MzsKLCxX8ACDnXnI9eZkxXuJPr9i6Q+iXNkqcUTB9NyJnfuRx7okPFWvrpzRj3mEs9RZJQ+P3YSfblvxDe2AtRBTZtg2MP0j7afolthS6gdTfhSU+1oRSyvZz0zn0F7TCgem6vNekGLw== tuoni
+        - id: 767066ac-78fb-4b06-bbbf-0bbb37b516c7
+          name: Tuoni pc
+          key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC8orN63XfjrkUQUp7cye96/Lx/4gOfs6MzsKLCxX8ACDnXnI9eZkxXuJPr9i6Q+iXNkqcUTB9NyJnfuRx7okPFWvrpzRj3mEs9RZJQ+P3YSfblvxDe2AtRBTZtg2MP0j7afolthS6gdTfhSU+1oRSyvZz0zn0F7TCgem6vNekGLw== tuoni
+    InstanceId:
+      type: string
+      description: id of the instance
+      example: 08458253-6954-4964-aec3-4084f509e05d
+    InstanceIds:
+      type: array
+      description: an array of instance id
+      items:
+        $ref: '#/components/schemas/InstanceId'
+      example:
+        - 08458253-6954-4964-aec3-4084f509e05d
+        - 63dedea9-5bfd-478f-8693-575b3336e0c1
+    Instance:
+      type: object
+      description: Instance details object
+      properties:
+        createdAt:
+          type: string
+        status:
+          $ref: '#/components/schemas/InstanceStatus'
+        ip:
+          type: string
+        cpu:
+          type: object
+          properties:
+            description:
+              type: string
+            numberOfCores:
+              type: number
+        gpu:
+          type: object
+          properties:
+            description:
+              type: string
+            numberOfGpus:
+              type: number
+        memory:
+          type: object
+          properties:
+            description:
+              type: string
+            sizeInGigabytes:
+              type: number
+        storage:
+          type: object
+          properties:
+            description:
+              type: string
+            sizeInGigabytes:
+              type: number
+        hostname:
+          type: string
+        description:
+          type: string
+        location:
+          $ref: '#/components/schemas/Location'
+        pricePerHour:
+          type: number
+        instanceType:
+          $ref: '#/components/schemas/InstanceType'
+        image:
+          $ref: '#/components/schemas/Image'
+    Instances:
+      type: array
+      description: an array of Instance details objects
+      items:
+        $ref: '#/components/schemas/Instance'
+    InstanceStatus:
+      type: string
+      enum:
+        - running
+        - provisioning
+        - offline
+        - discontinued
+        - starting hibernation
+        - hibernating
+        - restoring
+        - error
+    ActionType:
+      type: string
+      enum:
+        - start
+        - shutdown
+        - discontinue
+        - hibernate
+        - restore
+    InstanceType:
+      type: string
+      description: the instance type
+      enum:
+        - 8V100.48M
+        - 8V100.48V
+        - 4V100.20V
+        - 2V100.10V
+        - 1V100.6V
+    Image:
+      type: string
+      description: the image type (operating system)
+      enum:
+        - ubuntu-16.04
+        - ubuntu-18.04
+        - ubuntu-20.04
+        - ubuntu-18.04-cuda-10.2
+        - ubuntu-20.04-cuda-11.0
+        - centos-7
+        - centos-8
+        - fastai
+    DeployInstance:
+      type: object
+      description: an object describing an instance to deploy
+      properties:
+        instanceType:
+          $ref: '#/components/schemas/InstanceType'
+        image:
+          $ref: '#/components/schemas/Image'
+        sshKeyIds:
+          oneOf:
+            - $ref: '#/components/schemas/sshKeyId'
+            - $ref: '#/components/schemas/sshKeyIds'
+        startupScriptId:
+          $ref: '#/components/schemas/StartupScriptId'
+        hostname:
+          type: string
+          description: the instance hostname. free text
+        description:
+          type: string
+          description: the instance description. free text
+        location:
+          $ref: '#/components/schemas/Location'
+      required:
+        - instanceType
+        - image
+        - sshKeyIds
+        - hostname
+        - description
+        - location
+    DeployInstances:
+      type: array
+      description: an array of DeployInstance objects to deploy
+      items:
+        $ref: '#/components/schemas/DeployInstance'
+    Location:
+      type: string
+      title: Location
+      description: Datacenter Location
+      default: FIN1
+      x-examples:
+        Location example: FIN1
+      enum:
+        - FIN1
+    UserBalance:
+      title: UserBalance
+      type: object
+      description: The user's balance
+      x-examples:
+        50 dollars:
+          amount: 50
+          currency: usd
+      properties:
+        amount:
+          type: number
+        currency:
+          $ref: '#/components/schemas/Currency'
+    Currency:
+      type: string
+      title: Currency
+      default: usd
+      x-examples:
+        usd: usd
+      description: currency type
