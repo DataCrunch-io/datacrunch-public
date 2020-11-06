@@ -20,6 +20,7 @@ tags:
     description: startup scripts that execute when an instance is deployed
   - name: balance
     description: user balance
+  - name: Authentication
 paths:
   /instances:
     get:
@@ -464,6 +465,104 @@ paths:
           description: The type of the instance to check
           required: true
       summary: Check availability
+  /oauth2/token:
+    post:
+      summary: Get access token
+      operationId: getAccessToken
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    description: Access token value
+                  token_type:
+                    type: string
+                    default: Bearer
+                    example: Bearer
+                    enum:
+                      - Bearer
+                    description: Bearer token
+                  expires_in:
+                    type: integer
+                    description: Number of second until expires
+                  refresh_token:
+                    type: integer
+                    description: Refresh token value
+                  scope:
+                    type: string
+                    description: Access scope
+                    example: fullAccess
+                required:
+                  - access_token
+                  - token_type
+                  - expires_in
+                  - refresh_token
+                  - scope
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - invalid_request
+                      - invalid_scope
+                      - unsupported_grant_type
+                  error_description:
+                    type: string
+                  error_uri:
+                    type: string
+                required:
+                  - error
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                      - invalid_client
+                  error_description:
+                    type: string
+                  error_uri:
+                    type: string
+                required:
+                  - error
+      description: 'Get an access token, to access datacrunch API endpoints'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                grant_type:
+                  type: string
+                  default: client_credentials
+                  pattern: client_credentials
+                  enum:
+                    - client_credentials
+                  example: client_credentials
+                client_id:
+                  type: string
+                client_secret:
+                  type: string
+              required:
+                - grant_type
+                - client_id
+        description: ''
+      tags:
+        - Authentication
 components:
   securitySchemes:
     oauth2:
