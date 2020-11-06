@@ -115,6 +115,7 @@ paths:
           description: Not enough balance
         '503':
           description: Not enough resources at the moment
+      summary: Deploy new instance
   '/instances/{instanceId}':
     get:
       tags:
@@ -140,6 +141,7 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         '404':
           description: Instance was not found
+      summary: Get instance by id
   /instances/action:
     post:
       tags:
@@ -182,6 +184,7 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         '404':
           description: One or more instances were not found
+      summary: Perform action on instance
   /sshkeys:
     get:
       tags:
@@ -197,6 +200,7 @@ paths:
                 $ref: '#/components/schemas/sshKeys'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
+      summary: Get ssh keys
     post:
       tags:
         - ssh key
@@ -230,6 +234,7 @@ paths:
           description: Invalid input
         '401':
           $ref: '#/components/responses/UnauthorizedError'
+      summary: Add ssh key
     delete:
       tags:
         - ssh key
@@ -252,6 +257,7 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         '404':
           description: ssh key(s) was / were not found
+      summary: Delete ssh key
   '/sshKeys/{sshKeyId}':
     get:
       tags:
@@ -277,6 +283,7 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         '404':
           description: ssh key was not found
+      summary: Get ssh key by id
     delete:
       tags:
         - ssh key
@@ -297,6 +304,7 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         '404':
           description: ssh key was not found
+      summary: Delete ssh key by id
   /scripts:
     get:
       tags:
@@ -312,6 +320,7 @@ paths:
                 $ref: '#/components/schemas/StartupScripts'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
+      summary: Get all startup scripts
     post:
       tags:
         - startup script
@@ -339,6 +348,7 @@ paths:
           description: Invalid input
         '401':
           $ref: '#/components/responses/UnauthorizedError'
+      summary: Add startup script
     delete:
       tags:
         - startup script
@@ -359,6 +369,7 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         '404':
           description: startup script(s) was / were not found
+      summary: Delete startup script
   '/scripts/{scriptId}':
     get:
       tags:
@@ -384,6 +395,7 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         '404':
           description: startup script not found
+      summary: Get startup script by id
     delete:
       tags:
         - startup script
@@ -404,9 +416,10 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         '404':
           description: startup script was not found
+      summary: Delete startup script by id
   /balance:
     get:
-      summary: Returns the account balance
+      summary: Get account balance
       tags:
         - balance
       responses:
@@ -450,6 +463,7 @@ paths:
           in: path
           description: The type of the instance to check
           required: true
+      summary: Check availability
 components:
   securitySchemes:
     oauth2:
