@@ -602,6 +602,7 @@ paths:
         description: ''
       tags:
         - Authentication
+      security: []
 components:
   securitySchemes:
     oauth2:
