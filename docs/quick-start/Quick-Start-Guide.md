@@ -2,7 +2,7 @@
 tags: [Quick Start]
 ---
 
-# Quick-Start-Guide
+# Quick Start Guide
 
 ### 1. Get Credentials from the DataCrunch Dashboard
 
