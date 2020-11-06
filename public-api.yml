@@ -471,7 +471,7 @@ paths:
       operationId: getAccessToken
       responses:
         '200':
-          description: OK
+          description: Valid credentials
           content:
             application/json:
               schema:
@@ -491,7 +491,7 @@ paths:
                     type: integer
                     description: Number of second until expires
                   refresh_token:
-                    type: integer
+                    type: string
                     description: Refresh token value
                   scope:
                     type: string
@@ -503,6 +503,14 @@ paths:
                   - expires_in
                   - refresh_token
                   - scope
+              examples:
+                token response:
+                  value:
+                    access_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJoZXkiOiJ5b3UgYWN1YWxseSBjaGVja2VkIHRoaXM_In0.0RjcdKQ1NJP9gbRyXITE6LFFLwKGzeeshuubnkkfkb8
+                    token_type: Bearer
+                    expires_in: 3600
+                    refresh_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ3b3ciOiJhbmQgdGhpcyB0b28_In0.AC5gk-o-MOptUgrouEErlhr8WT3Hg_RR6px6A0I7ZEk
+                    scope: fullAccess
         '400':
           description: Invalid request
           content:
@@ -522,6 +530,22 @@ paths:
                     type: string
                 required:
                   - error
+              examples:
+                Invalid request:
+                  value:
+                    error: invalid_request
+                    error_description: The request is missing a parameter or includes an unsupported parameter or repeats a parameter.
+                    error_uri: string
+                Invalid Grant:
+                  value:
+                    error: invalid_grant
+                    error_description: The authorization code is invalid or expired
+                    error_uri: string
+                Unsupported Grant Type:
+                  value:
+                    error: unsupported_grant_type
+                    error_description: The server doesn't suppor the grant type
+                    error_uri: string
         '401':
           description: Unauthorized
           content:
@@ -539,6 +563,12 @@ paths:
                     type: string
                 required:
                   - error
+              examples:
+                Invalid Client:
+                  value:
+                    error: invalid_client
+                    error_description: Invalid client id or client secret
+                    error_uri: string
       description: 'Get an access token, to access datacrunch API endpoints'
       requestBody:
         content:
@@ -549,9 +579,9 @@ paths:
                 grant_type:
                   type: string
                   default: client_credentials
-                  pattern: client_credentials
                   enum:
                     - client_credentials
+                    - refresh_token
                   example: client_credentials
                 client_id:
                   type: string
@@ -559,7 +589,16 @@ paths:
                   type: string
               required:
                 - grant_type
-                - client_id
+            examples:
+              Get Access Token with client credentials:
+                value:
+                  grant_type: client_credentials
+                  client_id: XXXXXXXXXXXXXX
+                  client_secret: XXXXXXXXXXXXXX
+              Get Access Token using refresh token:
+                value:
+                  grant_type: refresh_token
+                  refresh_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ3b3ciOiJhbmQgdGhpcyB0b28_In0.AC5gk-o-MOptUgrouEErlhr8WT3Hg_RR6px6A0I7ZEk
         description: ''
       tags:
         - Authentication
