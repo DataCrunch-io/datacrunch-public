@@ -10,9 +10,13 @@ TODO
 
 ### 2. Get Access Token
 
-An Access Token is needed to be sent with any API call for authentication. The Access Token has a limited lifetime and is expired after a while as defined.
+An Access Token is needed to be sent with any API call for authentication.
 
-To get an access token, call the token endpoint with the credentials you got on step 1:
+The Access Token has a limited lifetime and is expired after a while as defined in `expires_in`.
+
+<br/>
+
+#### To get an access token, call the token endpoint with the credentials you got on step 1:
 
 ```json http
 {
