@@ -439,7 +439,7 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
       operationId: getBalance
       description: Return account balance
-  '/availability/{instanceType}':
+  '/instances/availability/{instanceType}':
     get:
       tags:
         - Instance
