@@ -584,9 +584,12 @@ paths:
                     - client_credentials
                     - refresh_token
                   example: client_credentials
+                  description: oauth2 grant type
                 client_id:
                   type: string
                 client_secret:
+                  type: string
+                refresh_token:
                   type: string
               required:
                 - grant_type
