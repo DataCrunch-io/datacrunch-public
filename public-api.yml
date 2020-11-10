@@ -527,8 +527,6 @@ paths:
                       - invalid_grant
                   error_description:
                     type: string
-                  error_uri:
-                    type: string
                 required:
                   - error
               examples:
@@ -536,12 +534,10 @@ paths:
                   value:
                     error: invalid_request
                     error_description: The request is missing a parameter or includes an unsupported parameter or repeats a parameter.
-                    error_uri: string
                 Unsupported Grant Type:
                   value:
                     error: unsupported_grant_type
                     error_description: The server doesn't suppor the grant type
-                    error_uri: string
         '401':
           description: Unauthorized
           content:
@@ -555,8 +551,6 @@ paths:
                       - invalid_client
                   error_description:
                     type: string
-                  error_uri:
-                    type: string
                 required:
                   - error
               examples:
@@ -564,7 +558,6 @@ paths:
                   value:
                     error: invalid_client
                     error_description: Invalid client id or client secret
-                    error_uri: string
       description: 'Get an access token, to access datacrunch API endpoints'
       requestBody:
         content:
