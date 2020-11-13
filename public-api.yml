@@ -259,7 +259,7 @@ paths:
         '404':
           description: ssh key(s) was / were not found
       summary: Delete ssh key
-  '/sshKeys/{sshKeyId}':
+  '/sshkeys/{sshKeyId}':
     get:
       tags:
         - SSH key
@@ -306,6 +306,7 @@ paths:
         '404':
           description: ssh key was not found
       summary: Delete ssh key by id
+    parameters: []
   /scripts:
     get:
       tags:
