@@ -537,7 +537,7 @@ paths:
                 Unsupported Grant Type:
                   value:
                     error: unsupported_grant_type
-                    error_description: The server doesn't suppor the grant type
+                    error_description: The server doesn't support the grant type
         '401':
           description: Unauthorized
           content:
