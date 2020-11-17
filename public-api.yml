@@ -329,17 +329,15 @@ paths:
     post:
       tags:
         - Startup Script
-      description: Add a new startup script or multiple startup scripts
+      description: Add a new startup script
       operationId: addScripts
       requestBody:
-        description: 'a startup script object, or an array of startup script objects'
+        description: a startup script object
         required: true
         content:
           application/json:
             schema:
-              oneOf:
-                - $ref: '#/components/schemas/StartupScript'
-                - $ref: '#/components/schemas/StartupScripts'
+              $ref: '#/components/schemas/StartupScript'
       responses:
         '200':
           description: 'startup script(s) added successfully, return id(s) of the new script(s)'
