@@ -221,9 +221,13 @@ paths:
                 key:
                   type: string
                   description: the actual public ssh key value
+              required:
+                - name
+                - key
             example:
               name: Ukkos kantele
               key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC8orN63XfjrkUQUp7cye96/Lx/4gOfs6MzsKLCxX8ACDnXnI9eZkxXuJPr9i6Q+iXNkqcUTB9NyJnfuRx7okPFWvrpzRj3mEs9RZJQ+P3YSfblvxDe2AtRBTZtg2MP0j7afolthS6gdTfhSU+1oRSyvZz0zn0F7TCgem6vNekGLw== tuoni
+            examples: {}
       responses:
         '201':
           description: 'Key added, returns the internal ssh key id'
@@ -337,11 +341,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/StartupScript'
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: script name
+                script:
+                  type: string
+                  description: bash script content
+              required:
+                - name
+                - script
             examples:
-              example-1:
+              Example:
                 value:
-                  id: de1ab590-892c-4294-9db2-9705049037b3
                   name: download repo
                   script: |-
                     #!/bin/bash
@@ -649,7 +662,6 @@ components:
           type: string
           description: the startup script text
       required:
-        - id
         - name
         - script
     StartupScripts:
