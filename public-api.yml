@@ -254,6 +254,8 @@ paths:
               properties:
                 keys:
                   $ref: '#/components/schemas/sshKeyIds'
+              required:
+                - keys
             examples:
               example-1:
                 value:
@@ -381,9 +383,18 @@ paths:
         content:
           application/json:
             schema:
-              oneOf:
-                - $ref: '#/components/schemas/StartupScriptId'
-                - $ref: '#/components/schemas/StartupScriptIds'
+              type: object
+              properties:
+                scripts:
+                  $ref: '#/components/schemas/StartupScriptIds'
+              required:
+                - scripts
+            examples:
+              Example:
+                value:
+                  scripts:
+                    - 26d43424-229e-4b45-bae2-86eb1e919514
+                    - 767066ac-78fb-4b06-bbbf-0bbb37b516c7
       responses:
         '200':
           description: startup script(s) deleted
