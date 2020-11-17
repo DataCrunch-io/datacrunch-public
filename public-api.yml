@@ -246,9 +246,10 @@ paths:
         content:
           application/json:
             schema:
-              oneOf:
-                - $ref: '#/components/schemas/sshKeyId'
-                - $ref: '#/components/schemas/sshKeyIds'
+              type: object
+              properties:
+                keys:
+                  $ref: '#/components/schemas/sshKeyIds'
       responses:
         '200':
           description: ssh key(s) deleted
@@ -258,7 +259,7 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         '404':
           description: ssh key(s) was / were not found
-      summary: Delete ssh key
+      summary: Delete ssh keys
   '/sshkeys/{sshKeyId}':
     get:
       tags:
