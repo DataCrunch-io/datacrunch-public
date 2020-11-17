@@ -338,15 +338,21 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/StartupScript'
+            examples:
+              example-1:
+                value:
+                  id: de1ab590-892c-4294-9db2-9705049037b3
+                  name: download repo
+                  script: |-
+                    #!/bin/bash
+                    # Your sh script here
       responses:
         '200':
-          description: 'startup script(s) added successfully, return id(s) of the new script(s)'
+          description: 'startup script added successfully, return id of the new script'
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/StartupScriptId'
-                  - $ref: '#/components/schemas/StartupScriptIds'
+                $ref: '#/components/schemas/StartupScriptId'
         '400':
           description: Invalid input
         '401':
@@ -627,6 +633,12 @@ components:
     StartupScript:
       type: object
       description: startup script object
+      example:
+        id: de1ab590-892c-4294-9db2-9705049037b3
+        name: download repo
+        script: |-
+          #!/bin/bash
+          # Your sh script here
       properties:
         id:
           $ref: '#/components/schemas/StartupScriptId'
@@ -636,12 +648,10 @@ components:
         script:
           type: string
           description: the startup script text
-      example:
-        id: de1ab590-892c-4294-9db2-9705049037b3
-        name: download repo
-        script: |-
-          #!/bin/bash
-          # Your sh script here
+      required:
+        - id
+        - name
+        - script
     StartupScripts:
       type: array
       description: an array of startup script objects
@@ -662,6 +672,10 @@ components:
     sshKey:
       type: object
       description: ssh key object
+      example:
+        id: 26d43424-229e-4b45-bae2-86eb1e919514
+        name: Ukkos kantele
+        key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC8orN63XfjrkUQUp7cye96/Lx/4gOfs6MzsKLCxX8ACDnXnI9eZkxXuJPr9i6Q+iXNkqcUTB9NyJnfuRx7okPFWvrpzRj3mEs9RZJQ+P3YSfblvxDe2AtRBTZtg2MP0j7afolthS6gdTfhSU+1oRSyvZz0zn0F7TCgem6vNekGLw== tuoni
       properties:
         id:
           $ref: '#/components/schemas/sshKeyId'
@@ -671,10 +685,10 @@ components:
         key:
           type: string
           description: the actual public ssh key value
-      example:
-        id: 26d43424-229e-4b45-bae2-86eb1e919514
-        name: Ukkos kantele
-        key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC8orN63XfjrkUQUp7cye96/Lx/4gOfs6MzsKLCxX8ACDnXnI9eZkxXuJPr9i6Q+iXNkqcUTB9NyJnfuRx7okPFWvrpzRj3mEs9RZJQ+P3YSfblvxDe2AtRBTZtg2MP0j7afolthS6gdTfhSU+1oRSyvZz0zn0F7TCgem6vNekGLw== tuoni
+      required:
+        - id
+        - name
+        - key
     sshKeys:
       type: array
       description: array of ssh key objects
@@ -850,6 +864,9 @@ components:
           type: number
         currency:
           $ref: '#/components/schemas/Currency'
+      required:
+        - amount
+        - currency
     Currency:
       type: string
       title: Currency
