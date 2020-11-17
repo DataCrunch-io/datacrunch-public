@@ -250,6 +250,12 @@ paths:
               properties:
                 keys:
                   $ref: '#/components/schemas/sshKeyIds'
+            examples:
+              example-1:
+                value:
+                  keys:
+                    - 26d43424-229e-4b45-bae2-86eb1e919514
+                    - 767066ac-78fb-4b06-bbbf-0bbb37b516c7
       responses:
         '200':
           description: ssh key(s) deleted
@@ -283,8 +289,6 @@ paths:
           description: Invalid input
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-        '404':
-          description: ssh key was not found
       summary: Get ssh key by id
     delete:
       tags:
@@ -304,8 +308,6 @@ paths:
           description: Invalid input
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-        '404':
-          description: ssh key was not found
       summary: Delete ssh key by id
     parameters: []
   /scripts:
@@ -396,8 +398,6 @@ paths:
           description: Invalid input
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-        '404':
-          description: startup script not found
       summary: Get startup script by id
     delete:
       tags:
@@ -417,8 +417,6 @@ paths:
           description: Invalid input
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-        '404':
-          description: startup script was not found
       summary: Delete startup script by id
   /balance:
     get:
