@@ -272,6 +272,7 @@ paths:
         '404':
           description: ssh key(s) was / were not found
       summary: Delete ssh keys
+      parameters: []
   '/sshkeys/{sshKeyId}':
     get:
       tags:
@@ -591,24 +592,37 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                grant_type:
-                  type: string
-                  default: client_credentials
-                  enum:
-                    - client_credentials
+              oneOf:
+                - properties:
+                    grant_type:
+                      type: string
+                      default: client_credentials
+                      enum:
+                        - client_credentials
+                      example: client_credentials
+                      description: oauth2 grant type
+                    client_id:
+                      type: string
+                    client_secret:
+                      type: string
+                  required:
+                    - grant_type
+                    - client_id
+                    - client_secret
+                - properties:
+                    grant_type:
+                      type: string
+                      enum:
+                        - refresh_token
+                      default: refresh_token
+                      example: refresh_token
+                      description: oauth2 grant type
+                    refresh_token:
+                      type: string
+                  required:
+                    - grant_type
                     - refresh_token
-                  example: client_credentials
-                  description: oauth2 grant type
-                client_id:
-                  type: string
-                client_secret:
-                  type: string
-                refresh_token:
-                  type: string
-              required:
-                - grant_type
+              type: object
             examples:
               Get Access Token with client credentials:
                 value:
