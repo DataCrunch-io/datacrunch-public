@@ -800,6 +800,8 @@ components:
           $ref: '#/components/schemas/InstanceType'
         image:
           $ref: '#/components/schemas/Image'
+        id:
+          type: string
     Instances:
       type: array
       description: an array of Instance details objects
