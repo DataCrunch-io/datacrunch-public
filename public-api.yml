@@ -51,63 +51,44 @@ paths:
     post:
       tags:
         - Instance
-      description: 'Deploy a new instance, or multiple instances'
+      description: Deploy a new instance
       operationId: deployInstance
       requestBody:
-        description: 'An instance object, or an array of instance objects'
+        description: An instance object
         required: true
         content:
           application/json:
             schema:
-              oneOf:
-                - $ref: '#/components/schemas/DeployInstance'
-                - $ref: '#/components/schemas/DeployInstances'
+              $ref: '#/components/schemas/DeployInstance'
             examples:
               deploy a single instance with single ssh key:
                 summary: 'deploy a single 4V100.20V instance with ubuntu 20.04 os, with single ssh key id, a startup script id'
                 value:
-                  instanceType: 4V100.20V
+                  instance_type: 4V100.20V
                   image: ubuntu-20.04
-                  sshKeyIds: c935afea-1559-4c94-817a-d2c87f7c36cd
-                  startupScriptId: 96ebbbd9-21a9-43cc-a146-6ce9cf59d2b2
+                  ssh_key_ids: c935afea-1559-4c94-817a-d2c87f7c36cd
+                  startup_script_id: 96ebbbd9-21a9-43cc-a146-6ce9cf59d2b2
                   hostname: UKKO-5
                   description: server for running lightning models
                   location: FIN1
-              deploy a single instance with multiple ssh keys:
+              'deploy a single instance with multiple ssh keys, no startup script':
                 summary: 'deploy a single 1V100.6V instance with fastai image, with multiple ssh keys ids but no startup script id'
                 value:
-                  instanceType: 1V100.6V
+                  instance_type: 1V100.6V
                   image: fastai
-                  sshKeyIds:
+                  ssh_key_ids:
                     - c935afea-1559-4c94-817a-d2c87f7c36cd
                     - 0ceddf93-b719-448a-9622-22806f5b7c8a
                   hostname: OiUkkoYlijumala
                   description: test instance
                   location: FIN1
-              deploy multiple instances:
-                summary: deploy multiple instances in one call
-                value:
-                  - instanceType: 8V100.48V
-                    image: ubuntu-18.04
-                    sshKeyIds: c935afea-1559-4c94-817a-d2c87f7c36cd
-                    hostname: Ahti-00
-                    description: calculating water stuff
-                    location: FIN1
-                  - instanceType: 8V100.48V
-                    image: ubuntu-18.04
-                    sshKeyIds: c935afea-1559-4c94-817a-d2c87f7c36cd
-                    hostname: Ahti-01
-                    description: calculating more water stuff
-                    location: FIN1
       responses:
         '202':
-          description: 'Accepted, Instance(s) is in process for deployment. Returns an array of the instance(s) id(s)'
+          description: 'Accepted, Instance is in process for deployment. Returns the instance ID'
           content:
             application/json:
               schema:
-                oneOf:
-                  - $ref: '#/components/schemas/InstanceId'
-                  - $ref: '#/components/schemas/InstanceIds'
+                $ref: '#/components/schemas/InstanceId'
         '400':
           description: Invalid input
         '401':
@@ -851,15 +832,15 @@ components:
       type: object
       description: an object describing an instance to deploy
       properties:
-        instanceType:
+        instance_type:
           $ref: '#/components/schemas/InstanceType'
         image:
           $ref: '#/components/schemas/Image'
-        sshKeyIds:
+        ssh_key_ids:
           oneOf:
             - $ref: '#/components/schemas/sshKeyId'
             - $ref: '#/components/schemas/sshKeyIds'
-        startupScriptId:
+        startup_script_id:
           $ref: '#/components/schemas/StartupScriptId'
         hostname:
           type: string
@@ -870,9 +851,9 @@ components:
         location:
           $ref: '#/components/schemas/Location'
       required:
-        - instanceType
+        - instance_type
         - image
-        - sshKeyIds
+        - ssh_key_ids
         - hostname
         - description
         - location
