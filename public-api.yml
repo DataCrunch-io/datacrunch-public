@@ -754,7 +754,7 @@ components:
       type: object
       description: Instance details object
       properties:
-        createdAt:
+        created_at:
           type: string
         status:
           $ref: '#/components/schemas/InstanceStatus'
@@ -765,28 +765,28 @@ components:
           properties:
             description:
               type: string
-            numberOfCores:
+            number_of_cores:
               type: number
         gpu:
           type: object
           properties:
             description:
               type: string
-            numberOfGpus:
+            number_of_gpus:
               type: number
         memory:
           type: object
           properties:
             description:
               type: string
-            sizeInGigabytes:
+            size_in_gigabytes:
               type: number
         storage:
           type: object
           properties:
             description:
               type: string
-            sizeInGigabytes:
+            size_in_gigabytes:
               type: number
         hostname:
           type: string
@@ -794,9 +794,9 @@ components:
           type: string
         location:
           $ref: '#/components/schemas/Location'
-        pricePerHour:
+        price_per_hour:
           type: number
-        instanceType:
+        instance_type:
           $ref: '#/components/schemas/InstanceType'
         image:
           $ref: '#/components/schemas/Image'
