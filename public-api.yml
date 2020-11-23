@@ -540,14 +540,14 @@ paths:
                 required:
                   - error
               examples:
-                Invalid request:
-                  value:
-                    error: invalid_request
-                    error_description: The request is missing a parameter or includes an unsupported parameter or repeats a parameter.
                 Unsupported Grant Type:
                   value:
-                    error: unsupported_grant_type
-                    error_description: The server doesn't support the grant type
+                    code: invalid_request
+                    message: unsupported grant type
+                Missing client id:
+                  value:
+                    error: invalid_request
+                    error_description: client_id was not specified
         '401':
           description: Unauthorized
           content:
