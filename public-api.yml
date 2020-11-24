@@ -250,8 +250,6 @@ paths:
           description: Invalid input
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-        '404':
-          description: ssh key(s) was / were not found
       summary: Delete ssh keys
       parameters: []
   '/sshkeys/{sshKeyId}':
