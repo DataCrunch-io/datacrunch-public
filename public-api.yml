@@ -548,6 +548,10 @@ paths:
                   value:
                     error: invalid_request
                     error_description: client_id was not specified
+                Missing client secret:
+                  value:
+                    error: invalid_request
+                    error_description: client_secret was not specified
         '401':
           description: Unauthorized
           content:
