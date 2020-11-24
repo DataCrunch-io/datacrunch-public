@@ -380,8 +380,6 @@ paths:
           description: startup script(s) deleted
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-        '404':
-          description: startup script(s) was / were not found
       summary: Delete startup script
   '/scripts/{scriptId}':
     get:
@@ -526,17 +524,17 @@ paths:
               schema:
                 type: object
                 properties:
-                  error:
+                  code:
                     type: string
                     enum:
                       - invalid_request
                       - invalid_scope
                       - unsupported_grant_type
                       - invalid_grant
-                  error_description:
+                  message:
                     type: string
                 required:
-                  - error
+                  - code
               examples:
                 Unsupported Grant Type:
                   value:
@@ -544,12 +542,12 @@ paths:
                     message: unsupported grant type
                 Missing client id:
                   value:
-                    error: invalid_request
-                    error_description: client_id was not specified
+                    code: invalid_request
+                    message: client_id was not specified
                 Missing client secret:
                   value:
-                    error: invalid_request
-                    error_description: client_secret was not specified
+                    code: invalid_request
+                    message: client_secret was not specified
         '401':
           description: Unauthorized
           content:
