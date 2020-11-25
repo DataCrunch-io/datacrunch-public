@@ -782,7 +782,11 @@ components:
         image:
           $ref: '#/components/schemas/Image'
         id:
-          type: string
+          $ref: '#/components/schemas/InstanceId'
+        startup_script_id:
+          $ref: '#/components/schemas/StartupScriptId'
+        ssh_key_ids:
+          $ref: '#/components/schemas/sshKeyIds'
     Instances:
       type: array
       description: an array of Instance details objects
