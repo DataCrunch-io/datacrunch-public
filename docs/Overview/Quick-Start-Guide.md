@@ -6,9 +6,18 @@ tags: [Quick Start]
 
 ### 1. Get Credentials from the DataCrunch Dashboard
 
-TODO
+Go to the **Account Info** page and click on **Generate Credentials**:
+![generate](../../assets/images/Credentials.png)
 
-### 2. Get Access Token
+Give a name to your credentials and generate:
+![generate](../../assets/images/Generated.png)
+
+These credentials will be used like a username & password for your application. 
+
+Store the client secret safely - like a password.
+
+
+### 2. Generate Access Token
 
 An Access Token is needed to be sent with any API call for authentication.
 
