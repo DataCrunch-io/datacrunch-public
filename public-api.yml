@@ -807,9 +807,9 @@ components:
       enum:
         - start
         - shutdown
-        - discontinue
         - hibernate
         - restore
+        - delete
     InstanceType:
       type: string
       description: the instance type
