@@ -4,7 +4,7 @@ tags: [Quick Start]
 
 # Quick Start Guide
 
-### 1. Get Credentials from the DataCrunch Dashboard
+### 1. Get Credentials from the DataCrunch.io Dashboard
 
 Go to the **Account Info** page and click on **Generate Credentials**:
 ![generate](../../assets/images/Credentials.png)
