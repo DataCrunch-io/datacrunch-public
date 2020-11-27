@@ -142,7 +142,15 @@ paths:
     post:
       tags:
         - Instance
-      description: Perform an action on an instance or multiple instances
+      description: |-
+        Perform an action on a deployed instance or multiple instances.
+
+        > Available actions are: 
+        `start`,`shutdown`,`hibernate`,`restore`,`delete`
+
+        Note: to `hibernate` an instance, you must first `shutdown` it.
+
+        > Note: To remove an instance and stop charging your account, you must `delete` it. Using `shutdown` will keep charging your account.
       operationId: instanceAction
       requestBody:
         description: 'id of instances to perform the action on, and the action type'
