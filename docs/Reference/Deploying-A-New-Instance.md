@@ -1,3 +1,4 @@
 # Deploying-A-New-Instance
 
-The beginning of an awesome article...
+You can select one of the following instance types:
+

@@ -94,7 +94,7 @@ Add the Access Token value to the `Authorization` header, preceded by the "Beare
 ```
 
 
-## How to refresh an Access token using the refresh token:
+## How to get a new Access token using the refresh token:
 
 When an Access Token expires, create a new one using the refresh token and calling the token endpoint with a `refresh_token` grant type:
 
