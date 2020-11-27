@@ -12,11 +12,11 @@ servers:
 security:
   - bearer: []
 tags:
-  - name: Instance
+  - name: Instances
     description: a datacrunch server instance
-  - name: SSH key
+  - name: SSH keys
     description: ssh keys for your instances
-  - name: Startup Script
+  - name: Startup Scripts
     description: startup scripts that execute when an instance is deployed
   - name: Balance
     description: user balance
@@ -25,7 +25,7 @@ paths:
   /instances:
     get:
       tags:
-        - Instance
+        - Instances
       summary: Get all instances
       description: 'Return all instances of the user, or all instances with a specific status (optional)'
       operationId: getAllInstances
@@ -50,7 +50,7 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
     post:
       tags:
-        - Instance
+        - Instances
       description: |-
         Deploy a new instance. Before deploying an instance, you need to add at least ssh key to be able to access your instance.
 
@@ -115,7 +115,7 @@ paths:
   '/instances/{instanceId}':
     get:
       tags:
-        - Instance
+        - Instances
       description: Return instance details by instance id
       operationId: getInstanceById
       parameters:
@@ -141,7 +141,7 @@ paths:
   /instances/action:
     post:
       tags:
-        - Instance
+        - Instances
       description: |-
         Perform an action on a deployed instance or multiple instances.
 
@@ -193,7 +193,7 @@ paths:
   /sshkeys:
     get:
       tags:
-        - SSH key
+        - SSH keys
       description: Return all ssh keys
       operationId: getSshKeys
       responses:
@@ -208,7 +208,7 @@ paths:
       summary: Get ssh keys
     post:
       tags:
-        - SSH key
+        - SSH keys
       description: Add a new ssh key
       operationId: addSshKeys
       requestBody:
@@ -246,7 +246,7 @@ paths:
       summary: Add ssh key
     delete:
       tags:
-        - SSH key
+        - SSH keys
       description: 'Delete ssh key, or multiple keys'
       operationId: deleteSshKeys
       requestBody:
@@ -278,7 +278,7 @@ paths:
   '/sshkeys/{sshKeyId}':
     get:
       tags:
-        - SSH key
+        - SSH keys
       description: Return ssh key by id
       operationId: getSshKeyById
       parameters:
@@ -301,7 +301,7 @@ paths:
       summary: Get ssh key by id
     delete:
       tags:
-        - SSH key
+        - SSH keys
       description: delete an ssh key by id
       operationId: deleteSshKeyById
       parameters:
@@ -322,7 +322,7 @@ paths:
   /scripts:
     get:
       tags:
-        - Startup Script
+        - Startup Scripts
       description: Return all startup scripts
       operationId: getScripts
       responses:
@@ -337,7 +337,7 @@ paths:
       summary: Get all startup scripts
     post:
       tags:
-        - Startup Script
+        - Startup Scripts
       description: Add a new startup script
       operationId: addScripts
       requestBody:
@@ -378,7 +378,7 @@ paths:
       summary: Add startup script
     delete:
       tags:
-        - Startup Script
+        - Startup Scripts
       description: Delete a startup script or multiple startup scripts
       operationId: deleteScripts
       requestBody:
@@ -407,7 +407,7 @@ paths:
   '/scripts/{scriptId}':
     get:
       tags:
-        - Startup Script
+        - Startup Scripts
       description: Return startup script with specific ID
       operationId: getScriptById
       parameters:
@@ -430,7 +430,7 @@ paths:
       summary: Get startup script by id
     delete:
       tags:
-        - Startup Script
+        - Startup Scripts
       description: delete a startup script by id
       operationId: deleteScriptById
       parameters:
@@ -471,7 +471,7 @@ paths:
   '/instances/availability/{instanceType}':
     get:
       tags:
-        - Instance
+        - Instances
       responses:
         '200':
           description: Return instance type availability - true or false
