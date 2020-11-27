@@ -11,7 +11,7 @@ Key | Info |
 
 
 Code | Description | Matching HTTP error code
----------|----------|
+---------|----------|----------|
  invalid_request | Invalid request, usually an input error - missing or invalid property etc. | 400 |
  unauthorized_request | Access token is missing or invalid  | 401 |
  insufficient_funds | Not enough funds to perform the action | 402 |
