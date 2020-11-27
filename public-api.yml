@@ -150,7 +150,8 @@ paths:
 
         Note: to `hibernate` an instance, you must first `shutdown` it.
 
-        > Note: To remove an instance and stop charging your account, you must `delete` it. Using `shutdown` will keep charging your account.
+        Note: To remove an instance and stop charging your account, you must `delete` it. 
+        Using `shutdown` will keep charging your account.
       operationId: instanceAction
       requestBody:
         description: 'id of instances to perform the action on, and the action type'
