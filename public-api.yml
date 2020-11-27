@@ -51,7 +51,21 @@ paths:
     post:
       tags:
         - Instance
-      description: Deploy a new instance
+      description: |-
+        Deploy a new instance. Before deploying an instance, you need to add at least ssh key to be able to access your instance.
+
+        You can select one of the following [instance types](https://datacrunch.io/products/): 
+        `8V100.48M`,`8V100.48V`,`4V100.20V`,`2V100.10V`,`1V100.6V`
+
+        The following images types are available:
+        `ubuntu-16.04`,`ubuntu-18.04`,`ubuntu-20.04`,`ubuntu-18.04-cuda-10.2`,`ubuntu-20.04-cuda-11.0`,`centos-7`,`centos-8`,`fastai`
+
+        The following locations are availabe:
+        `FIN1`
+
+        You can also add a startup script, but it's an optional field.
+
+        Instance hostname and description are mandatory.
       operationId: deployInstance
       requestBody:
         description: An instance object
