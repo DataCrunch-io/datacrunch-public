@@ -1,14 +1,13 @@
 # Errors
 
-In addition to the standard HTTP status error codes, Error response data also contains the following keys:
+In addition to the standard HTTP status error codes, Error response contain data with the following schema:
 
 Key | Info | 
 ---------|----------|
  code | Error type |
  message | Textual description of the error details |
 
- Error codes:
-
+ Error types:
 
 Code | Description | Matching HTTP error code
 ---------|----------|----------|
