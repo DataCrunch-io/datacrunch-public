@@ -187,6 +187,8 @@ paths:
           description: Invalid input
         '401':
           $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          description: Forbidden Action
         '404':
           description: One or more instances were not found
       summary: Perform action on instance
