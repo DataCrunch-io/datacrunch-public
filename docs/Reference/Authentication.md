@@ -35,7 +35,7 @@ Give a name to your credentials and generate:
 
 These credentials will be used like a username & password for your application. 
 
-Store the client secret safely! If you want to access it in your code, it's best to export it to an [environment variable](https://en.wikipedia.org/wiki/Environment_variable).
+Store the client secret safely! If you want to access it in your code, it's recommended to export it to an [environment variable](https://en.wikipedia.org/wiki/Environment_variable).
 
 ## How to generate Access & Refresh tokens:
 
