@@ -21,6 +21,7 @@ tags:
   - name: Balance
     description: user balance
   - name: Authentication
+  - name: Images
 paths:
   /instances:
     get:
@@ -642,7 +643,8 @@ paths:
   /images:
     get:
       summary: Get all image types
-      tags: []
+      tags:
+        - Images
       responses:
         '200':
           description: all available image types
@@ -653,7 +655,6 @@ paths:
   /instances/types:
     get:
       summary: Get all instance types
-      tags: []
       responses:
         '200':
           description: instances types
@@ -661,6 +662,8 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
       operationId: getInstancesTypes
       description: Return all instances types
+      tags:
+        - Instances
 components:
   securitySchemes:
     oauth2:
