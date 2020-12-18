@@ -582,12 +582,8 @@ paths:
                 properties:
                   error:
                     type: string
-                    enum:
-                      - invalid_client
                   error_description:
                     type: string
-                required:
-                  - error
               examples:
                 Invalid Client:
                   value:
@@ -643,6 +639,28 @@ paths:
       tags:
         - Authentication
       security: []
+  /images:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: all available image types
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      operationId: getImages
+      description: return all available image types
+  /instances/types:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: instances types
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      operationId: getInstancesTypes
+      description: return all instances types
 components:
   securitySchemes:
     oauth2:
