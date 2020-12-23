@@ -581,15 +581,15 @@ paths:
               schema:
                 type: object
                 properties:
-                  error:
+                  code:
                     type: string
-                  error_description:
+                  message:
                     type: string
               examples:
                 Invalid Client:
                   value:
-                    error: invalid_client
-                    error_description: Invalid client id or client secret
+                    code: unauthorized_request
+                    message: Invalid client id or client secret
       description: 'Get an access token, to access datacrunch API endpoints'
       requestBody:
         content:
