@@ -47,7 +47,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Instances'
         '400':
-          description: Invalid input
+          $ref: '#/components/responses/InvalidInput'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
     post:
@@ -134,7 +134,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Instance'
         '400':
-          description: Invalid input
+          $ref: '#/components/responses/InvalidInput'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
         '404':
@@ -186,7 +186,7 @@ paths:
         '202':
           description: Action accepted and will be performed
         '400':
-          description: Invalid input
+          $ref: '#/components/responses/InvalidInput'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
         '403':
@@ -484,7 +484,7 @@ paths:
                 type: boolean
               examples: {}
         '400':
-          description: Invalid input
+          $ref: '#/components/responses/InvalidInput'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
       operationId: getAvailability
@@ -665,6 +665,25 @@ paths:
       tags:
         - Instance Types
     parameters: []
+  /volumes:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: Returns an array of all the user's storage volumes
+        '400':
+          $ref: '#/components/responses/InvalidInput'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      operationId: getAllVolumes
+      description: 'Return all storage volumes of the user, or all storage volumes with a specific status (optional)'
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: status
+          description: Return all user storage volumes with specific status
 components:
   securitySchemes:
     oauth2:
@@ -683,6 +702,8 @@ components:
   responses:
     UnauthorizedError:
       description: Access token is missing or invalid
+    InvalidInput:
+      description: One or more of the inputs were invalid
   schemas:
     StartupScriptId:
       type: string
