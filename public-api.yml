@@ -747,7 +747,42 @@ paths:
         > Available actions are: 
         `attach`, `detach`, `delete`, `rename`, `increase-size`
 
-        Note: to detach or delete a volume, the attached instance should be shutdown
+        Note: to attach, detach or delete a volume, the target / attached instance should be shutdown
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                action:
+                  type: string
+                size:
+                  type: number
+                name:
+                  type: string
+                instance_id:
+                  type: string
+              required:
+                - action
+            examples:
+              detaching a volume from an instance:
+                value:
+                  action: detach
+              attaching a volume to an instance:
+                value:
+                  action: attach
+                  instance_id: 26d43424-229e-4b45-bae2-86eb1e919514
+              deleting a volume:
+                value:
+                  action: delete
+              renaming a volume:
+                value:
+                  action: rename
+                  name: your-new-volume-name
+              increasing a volume's size:
+                value:
+                  action: increase-size
+                  size: 250
 components:
   securitySchemes:
     oauth2:
