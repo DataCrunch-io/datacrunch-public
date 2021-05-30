@@ -714,10 +714,12 @@ paths:
           $ref: '#/components/responses/InvalidInput'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: Volume not found
       operationId: getVolumeById
       description: Return a storage volume by id
     delete:
-      summary: ''
+      summary: Delete volume by id
       operationId: deleteVolumeById
       responses:
         '202':
@@ -727,6 +729,25 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedError'
       description: Delete a specific volume by id
+    put:
+      summary: Perform action on volume
+      operationId: volumeAction
+      responses:
+        '202':
+          description: Action request was accepted
+        '400':
+          $ref: '#/components/responses/InvalidInput'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: Volume not found
+      description: |-
+        Perform an action on a storage volume
+
+        > Available actions are: 
+        `attach`, `detach`, `delete`, `rename`, `increase-size`
+
+        Note: to detach or delete a volume, the attached instance should be shutdown
 components:
   securitySchemes:
     oauth2:
