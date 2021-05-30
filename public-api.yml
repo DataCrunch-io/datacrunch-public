@@ -667,7 +667,7 @@ paths:
     parameters: []
   /volumes:
     get:
-      summary: Your GET endpoint
+      summary: Get all Storage Volumes
       tags: []
       responses:
         '200':
@@ -684,6 +684,13 @@ paths:
           in: query
           name: status
           description: Return all user storage volumes with specific status
+    post:
+      summary: Create New Storage Volume
+      operationId: createVolume
+      responses:
+        '202':
+          description: 'Accepted, volumeis in being created. Returns the volume ID'
+      description: Create a new storage volume
 components:
   securitySchemes:
     oauth2:
