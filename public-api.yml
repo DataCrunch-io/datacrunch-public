@@ -243,7 +243,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/sshKeyId'
         '400':
-          description: Invalid input
+          $ref: '#/components/responses/InvalidInput'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
       summary: Add ssh key
@@ -273,7 +273,7 @@ paths:
         '200':
           description: ssh key(s) deleted
         '400':
-          description: Invalid input
+          $ref: '#/components/responses/InvalidInput'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
       summary: Delete ssh keys
@@ -298,7 +298,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/sshKey'
         '400':
-          description: Invalid input
+          $ref: '#/components/responses/InvalidInput'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
       summary: Get ssh key by id
@@ -317,7 +317,7 @@ paths:
         '200':
           description: ssh key deleted
         '400':
-          description: Invalid input
+          $ref: '#/components/responses/InvalidInput'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
       summary: Delete ssh key by id
@@ -375,7 +375,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/StartupScriptId'
         '400':
-          description: Invalid input
+          $ref: '#/components/responses/InvalidInput'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
       summary: Add startup script
@@ -404,6 +404,8 @@ paths:
       responses:
         '200':
           description: startup script(s) deleted
+        '400':
+          $ref: '#/components/responses/InvalidInput'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
       summary: Delete startup script
@@ -427,7 +429,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/StartupScript'
         '400':
-          description: Invalid input
+          $ref: '#/components/responses/InvalidInput'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
       summary: Get startup script by id
@@ -446,7 +448,7 @@ paths:
         '200':
           description: startup script deleted
         '400':
-          description: Invalid input
+          $ref: '#/components/responses/InvalidInput'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
       summary: Delete startup script by id
@@ -689,8 +691,42 @@ paths:
       operationId: createVolume
       responses:
         '202':
-          description: 'Accepted, volumeis in being created. Returns the volume ID'
+          description: 'Accepted, volume is in being created. Returns the volume ID'
+        '400':
+          $ref: '#/components/responses/InvalidInput'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
       description: Create a new storage volume
+  '/volumes/{volumeId}':
+    parameters:
+      - schema:
+          type: string
+        name: volumeId
+        in: path
+        required: true
+    get:
+      summary: Get storage volume by id
+      tags: []
+      responses:
+        '200':
+          description: Volume details
+        '400':
+          $ref: '#/components/responses/InvalidInput'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      operationId: getVolumeById
+      description: Return a storage volume by id
+    delete:
+      summary: ''
+      operationId: deleteVolumeById
+      responses:
+        '202':
+          description: Delete request accepted
+        '400':
+          $ref: '#/components/responses/InvalidInput'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      description: Delete a specific volume by id
 components:
   securitySchemes:
     oauth2:
