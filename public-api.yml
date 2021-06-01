@@ -1058,6 +1058,8 @@ components:
           description: the instance description. free text
         location:
           $ref: '#/components/schemas/Location'
+        volumes:
+          $ref: '#/components/schemas/DeployVolumes'
       required:
         - instance_type
         - image
@@ -1065,6 +1067,24 @@ components:
         - hostname
         - description
         - location
+      x-examples:
+        deploy instance with 2 volumes:
+          value:
+            instance_type: 8V100.48M
+            image: ubuntu-18.04
+            ssh_key_ids: 26d43424-229e-4b45-bae2-86eb1e919514
+            startup_script_id: 26d43424-229e-4b45-bae2-86eb1e919514
+            hostname: string
+            description: string
+            location: FIN1
+            volumes:
+              - name: os-volume
+                size: 50
+                type: NVMe
+                is_os_volume: true
+              - name: large-storage
+                size: 500
+                type: HDD
     Location:
       type: string
       title: Location
@@ -1220,18 +1240,6 @@ components:
       title: DeployVolume
       type: object
       description: an object describing a volume to deploy
-      properties:
-        name:
-          type: string
-        size:
-          type: number
-          minimum: 40
-        type:
-          $ref: '#/components/schemas/VolumeType'
-        instance_id:
-          type: string
-          format: uuid
-          nullable: true
       x-examples:
         'A volume to deploy, with offline instance id to detach to':
           value:
@@ -1245,3 +1253,27 @@ components:
             size: 40
             type: NVMe
             instance_id: null
+      properties:
+        name:
+          type: string
+        size:
+          type: number
+          minimum: 40
+        type:
+          $ref: '#/components/schemas/VolumeType'
+        instance_id:
+          type: string
+          format: uuid
+          nullable: true
+        is_os_volume:
+          type: boolean
+      required:
+        - name
+        - size
+        - type
+    DeployVolumes:
+      title: DeployVolumes
+      type: array
+      items:
+        $ref: '#/components/schemas/DeployVolume'
+      description: An array of volumes data to deploy
