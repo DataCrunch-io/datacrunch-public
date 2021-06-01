@@ -960,3 +960,13 @@ components:
       x-examples:
         usd: usd
       description: currency type
+    VolumeStatus:
+      type: string
+      title: VolumeStatus
+      enum:
+        - attached
+        - detached
+        - deleted
+        - ordered
+        - creating
+        - deleting
