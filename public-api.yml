@@ -674,6 +674,11 @@ paths:
       responses:
         '200':
           description: Returns an array of all the user's storage volumes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Volumes'
+              examples: {}
         '400':
           $ref: '#/components/responses/InvalidInput'
         '401':
@@ -890,6 +895,7 @@ components:
       type: string
       description: id of the instance
       example: 08458253-6954-4964-aec3-4084f509e05d
+      format: uuid
     InstanceIds:
       type: array
       description: an array of instance id
@@ -1033,7 +1039,8 @@ components:
       description: Datacenter Location
       default: FIN1
       x-examples:
-        Location example: FIN1
+        Location example:
+          value: FIN1
       enum:
         - FIN1
     UserBalance:
@@ -1069,3 +1076,110 @@ components:
         - ordered
         - creating
         - deleting
+      x-examples:
+        attached:
+          value: attached
+        detached:
+          value: detached
+      description: status of a storage volume
+    Volume:
+      title: Volume
+      type: object
+      x-tags:
+        - Volume
+      x-examples:
+        'Attached NVMe Volume ':
+          value:
+            id: cf995e26-ce69-4149-84a3-cdd1e100670f
+            status: attached
+            instance_id: 4fee633c-b119-4447-af9c-70ba17675fc5
+            name: Volume-nxC2tf9F
+            size: 50
+            type_id: NVMe
+            location: FIN1
+            is_os_volume: true
+        Detached HDD Volume:
+          value:
+            id: ea4edc62-9838-4b7c-bd5b-862f2efec675
+            status: detached
+            instance_id: null
+            name: Volume-iHdL4ysR
+            size: 100
+            type_id: HDD
+            location: FIN1
+            is_os_volume: false
+      description: Storage volume details object
+      properties:
+        id:
+          $ref: '#/components/schemas/VolumeId'
+        status:
+          $ref: '#/components/schemas/VolumeStatus'
+        instance_id:
+          type: string
+          nullable: true
+        name:
+          type: string
+        size:
+          type: number
+        type_id:
+          $ref: '#/components/schemas/VolumeType'
+        location:
+          $ref: '#/components/schemas/Location'
+        is_os_volume:
+          type: boolean
+      required:
+        - id
+        - status
+        - instance_id
+        - name
+        - size
+        - type_id
+        - location
+        - is_os_volume
+    VolumeId:
+      type: string
+      title: VolumeId
+      x-tags:
+        - volumes
+      description: id of a storage volume
+      x-examples:
+        example-1:
+          value: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+      format: uuid
+    VolumeType:
+      type: string
+      title: VolumeType
+      enum:
+        - NVMe
+        - HDD
+      x-examples:
+        NVMe:
+          value: NVMe
+        HDD:
+          value: HDD
+      description: storage volume type
+    Volumes:
+      title: Volumes
+      type: array
+      description: Array of storage volume objects
+      items:
+        $ref: '#/components/schemas/Volume'
+      x-examples:
+        Array of user volumes:
+          value:
+            - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+              status: attached
+              instance_id: string
+              name: Volume-nxC2tf9F
+              size: 0
+              type_id: NVMe
+              location: FIN1
+              is_os_volume: true
+            - id: ea4edc62-9838-4b7c-bd5b-862f2efec675
+              status: detached
+              instance_id: null
+              name: Volume-iHdL4ysR
+              size: 100
+              type_id: HDD
+              location: FIN1
+              is_os_volume: false
