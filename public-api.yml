@@ -822,6 +822,27 @@ paths:
                 value:
                   action: increase-size
                   size: 250
+  /volume-types:
+    get:
+      summary: Get Volume Types
+      tags:
+        - Volumes
+      responses:
+        '200':
+          description: volume types
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VolumeType'
+              examples:
+                NVMe:
+                  value: NVMe
+                HDD:
+                  value: HDD
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      operationId: getVolumeTypes
+      description: returns all volume types
 components:
   securitySchemes:
     oauth2:
