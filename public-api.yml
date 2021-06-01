@@ -190,7 +190,7 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedError'
         '403':
-          description: Forbidden Action
+          $ref: '#/components/responses/ForbiddenAction'
         '404':
           description: One or more instances were not found
       summary: Perform action on instance
@@ -711,7 +711,15 @@ paths:
           $ref: '#/components/responses/InvalidInput'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          description: Instance to attach to is not shutdown
       description: Create a new storage volume
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeployVolume'
+            examples: {}
   '/volumes/{volumeId}':
     parameters:
       - schema:
@@ -754,6 +762,8 @@ paths:
           $ref: '#/components/responses/InvalidInput'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenAction'
         '404':
           description: Volume not found
       description: |-
@@ -818,6 +828,8 @@ components:
       description: Access token is missing or invalid
     InvalidInput:
       description: One or more of the inputs were invalid
+    ForbiddenAction:
+      description: The Action is forbidden
   schemas:
     StartupScriptId:
       type: string
@@ -1128,7 +1140,7 @@ components:
         size:
           type: number
           minimum: 40
-        type_id:
+        type:
           $ref: '#/components/schemas/VolumeType'
         location:
           $ref: '#/components/schemas/Location'
@@ -1140,7 +1152,7 @@ components:
         - instance_id
         - name
         - size
-        - type_id
+        - type
         - location
         - is_os_volume
     VolumeId:
@@ -1190,3 +1202,32 @@ components:
               type_id: HDD
               location: FIN1
               is_os_volume: false
+    DeployVolume:
+      title: DeployVolume
+      type: object
+      description: an object describing a volume to deploy
+      properties:
+        name:
+          type: string
+        size:
+          type: number
+          minimum: 40
+        type:
+          $ref: '#/components/schemas/VolumeType'
+        instance_id:
+          type: string
+          format: uuid
+          nullable: true
+      x-examples:
+        'A volume to deploy, with offline instance id to detach to':
+          value:
+            name: My-Volume
+            size: 40
+            type: NVMe
+            instance_id: 06587974-2dbe-4e10-8bf9-38cce0f5a366
+        'A volume to deploy, with no instance to attach to, volume will be detached':
+          value:
+            name: My-Detached-Volume
+            size: 40
+            type: NVMe
+            instance_id: null
