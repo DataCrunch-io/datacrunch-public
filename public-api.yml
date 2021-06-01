@@ -61,7 +61,7 @@ paths:
         `8V100.48M`,`8V100.48V`,`4V100.20V`,`2V100.10V`,`1V100.6V`
 
         The following images types are available:
-        `ubuntu-16.04`,`ubuntu-18.04`,`ubuntu-20.04`,`ubuntu-18.04-cuda-10.2`,`ubuntu-20.04-cuda-11.0`,`centos-7`,`centos-8`,`fastai`
+        `ubuntu-18.04`,`ubuntu-20.04`,`ubuntu-20.04-cuda-11.2`,`fastai`
 
         The following locations are availabe:
         `FIN1`
