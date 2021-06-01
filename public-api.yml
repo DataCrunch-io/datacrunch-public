@@ -678,7 +678,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Volumes'
-              examples: {}
+              examples:
+                example-1:
+                  value:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      status: attached
+                      instance_id: string
+                      name: string
+                      size: 40
+                      type_id: NVMe
+                      location: FIN1
+                      is_os_volume: true
         '400':
           $ref: '#/components/responses/InvalidInput'
         '401':
@@ -893,12 +903,12 @@ components:
           key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC8orN63XfjrkUQUp7cye96/Lx/4gOfs6MzsKLCxX8ACDnXnI9eZkxXuJPr9i6Q+iXNkqcUTB9NyJnfuRx7okPFWvrpzRj3mEs9RZJQ+P3YSfblvxDe2AtRBTZtg2MP0j7afolthS6gdTfhSU+1oRSyvZz0zn0F7TCgem6vNekGLw== tuoni
     InstanceId:
       type: string
-      description: id of the instance
+      description: id of an instance
       example: 08458253-6954-4964-aec3-4084f509e05d
       format: uuid
     InstanceIds:
       type: array
-      description: an array of instance id
+      description: an array of instance ids
       items:
         $ref: '#/components/schemas/InstanceId'
       example:
@@ -996,14 +1006,10 @@ components:
       type: string
       description: the image type (operating system)
       enum:
-        - ubuntu-16.04
         - ubuntu-18.04
         - ubuntu-20.04
-        - ubuntu-18.04-cuda-10.2
-        - ubuntu-20.04-cuda-11.0
-        - centos-7
-        - centos-8
         - fastai
+        - ubuntu-20.04-cuda-11.2
     DeployInstance:
       type: object
       description: an object describing an instance to deploy
@@ -1121,6 +1127,7 @@ components:
           type: string
         size:
           type: number
+          minimum: 40
         type_id:
           $ref: '#/components/schemas/VolumeType'
         location:
