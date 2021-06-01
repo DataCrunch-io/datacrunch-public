@@ -23,6 +23,7 @@ tags:
   - name: Authentication
   - name: Images
   - name: Instance Types
+  - name: Volumes
 paths:
   /instances:
     get:
@@ -140,14 +141,7 @@ paths:
         '404':
           description: Instance was not found
       summary: Get instance by id
-    parameters:
-      - schema:
-          type: string
-        name: ''
-        in: path
-        required: true
-  /instances/action:
-    post:
+    put:
       tags:
         - Instances
       description: |-
@@ -161,6 +155,12 @@ paths:
         Note: To remove an instance and stop charging your account, you must `delete` it. 
         Using `shutdown` will keep charging your account.
       operationId: instanceAction
+      parameters:
+        - name: instanceId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/InstanceId'
       requestBody:
         description: 'id of instances to perform the action on, and the action type'
         required: true
@@ -676,7 +676,8 @@ paths:
   /volumes:
     get:
       summary: Get all Storage Volumes
-      tags: []
+      tags:
+        - Volumes
       responses:
         '200':
           description: Returns an array of all the user's storage volumes
@@ -692,7 +693,7 @@ paths:
                       instance_id: string
                       name: string
                       size: 40
-                      type_id: NVMe
+                      type: NVMe
                       location: FIN1
                       is_os_volume: true
         '400':
@@ -709,6 +710,8 @@ paths:
           description: Return all user storage volumes with specific status
     post:
       summary: Create New Storage Volume
+      tags:
+        - Volumes
       operationId: createVolume
       responses:
         '202':
@@ -735,7 +738,8 @@ paths:
         description: volume id
     get:
       summary: Get storage volume by id
-      tags: []
+      tags:
+        - Volumes
       responses:
         '200':
           description: Volume details
@@ -749,6 +753,8 @@ paths:
       description: Return a storage volume by id
     delete:
       summary: Delete volume by id
+      tags:
+        - Volumes
       operationId: deleteVolumeById
       responses:
         '202':
@@ -760,6 +766,8 @@ paths:
       description: Delete a specific volume by id
     put:
       summary: Perform action on volume
+      tags:
+        - Volumes
       operationId: volumeAction
       responses:
         '202':
