@@ -763,6 +763,8 @@ paths:
           $ref: '#/components/responses/InvalidInput'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: Volume not found
       description: Delete a specific volume by id
     put:
       summary: Perform action on volume
