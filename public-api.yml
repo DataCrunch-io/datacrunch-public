@@ -140,6 +140,12 @@ paths:
         '404':
           description: Instance was not found
       summary: Get instance by id
+    parameters:
+      - schema:
+          type: string
+        name: ''
+        in: path
+        required: true
   /instances/action:
     post:
       tags:
@@ -722,11 +728,11 @@ paths:
             examples: {}
   '/volumes/{volumeId}':
     parameters:
-      - schema:
-          type: string
+      - schema: {}
         name: volumeId
         in: path
         required: true
+        description: volume id
     get:
       summary: Get storage volume by id
       tags: []
@@ -1158,13 +1164,13 @@ components:
     VolumeId:
       type: string
       title: VolumeId
-      x-tags:
-        - volumes
       description: id of a storage volume
       x-examples:
-        example-1:
+        id:
           value: 497f6eca-6276-4993-bfeb-53cbbbba6f08
       format: uuid
+      x-tags:
+        - Volume
     VolumeType:
       type: string
       title: VolumeType
