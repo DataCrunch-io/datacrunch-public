@@ -200,6 +200,61 @@ paths:
         '404':
           description: One or more instances were not found
       summary: Perform action on instance
+  /instances/action:
+    post:
+      tags:
+        - Instances
+      description: |-
+        Perform an action on a deployed instance or multiple instances.
+
+        > Available actions are: 
+        `start`,`shutdown`,`hibernate`,`restore`,`delete`
+
+        Note: to `hibernate` an instance, you must first `shutdown` it.
+
+        Note: To remove an instance and stop charging your account, you must `delete` it. 
+        Using `shutdown` will keep charging your account.
+      operationId: instanceActionDeprecated
+      requestBody:
+        description: 'id of instances to perform the action on, and the action type'
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  oneOf:
+                    - $ref: '#/components/schemas/InstanceId'
+                    - $ref: '#/components/schemas/InstanceIds'
+                action:
+                  $ref: '#/components/schemas/ActionType'
+            examples:
+              perform an action on a single instance:
+                summary: perform an action on a single instance
+                value:
+                  id: 26d43424-229e-4b45-bae2-86eb1e919514
+                  action: hibernate
+              perform an action on multiple instances:
+                summary: perform an action on multiple instances
+                value:
+                  id:
+                    - 26d43424-229e-4b45-bae2-86eb1e919514
+                    - d40707e1-b0e0-43d0-a3a6-22457f91f906
+                  action: shutdown
+      responses:
+        '202':
+          description: Action accepted and will be performed
+        '400':
+          description: Invalid input
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          description: Forbidden Action
+        '404':
+          description: One or more instances were not found
+      summary: Perform action on instance
+      deprecated: true
   /sshkeys:
     get:
       tags:
@@ -495,7 +550,7 @@ paths:
           $ref: '#/components/responses/InvalidInput'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-      operationId: getAvailability
+      operationId: getAvailabilityDeprecated
       description: Check if an instance type is available to deploy for the account
       parameters:
         - schema:
@@ -505,6 +560,7 @@ paths:
           description: The type of the instance to check
           required: true
       summary: Check availability
+      deprecated: true
   /oauth2/token:
     post:
       summary: Get access token
@@ -845,6 +901,32 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
       operationId: getVolumeTypes
       description: returns all volume types
+  '/instance-availability/{instanceType}':
+    get:
+      tags:
+        - Instances
+      responses:
+        '200':
+          description: Return instance type availability - true or false
+          content:
+            application/json:
+              schema:
+                type: boolean
+              examples: {}
+        '400':
+          $ref: '#/components/responses/InvalidInput'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      operationId: getAvailability
+      description: Check if an instance type is available to deploy for the account
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/InstanceType'
+          name: instanceType
+          in: path
+          description: The type of the instance to check
+          required: true
+      summary: Check availability
 components:
   securitySchemes:
     oauth2:
