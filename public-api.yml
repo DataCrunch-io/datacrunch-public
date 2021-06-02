@@ -855,7 +855,15 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/DeployVolume'
-            examples: {}
+            examples:
+              example-1:
+                value:
+                  name: volume1
+                  size: 40
+                  type: NVMe
+                  instance_id: 06587974-2dbe-4e10-8bf9-38cce0f5a366
+                  location: FIN1
+        description: ''
   '/volumes/{volumeId}':
     parameters:
       - schema: {}
@@ -1426,6 +1434,7 @@ components:
       properties:
         name:
           type: string
+          maxLength: 60
         size:
           type: number
           minimum: 40
@@ -1436,6 +1445,8 @@ components:
           format: uuid
         is_os_volume:
           type: boolean
+        location:
+          $ref: '#/components/schemas/Location'
       required:
         - name
         - size
