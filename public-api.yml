@@ -115,32 +115,6 @@ paths:
         '503':
           description: Not enough resources at the moment
       summary: Deploy new instance
-  '/instances/{instanceId}':
-    get:
-      tags:
-        - Instances
-      description: Return instance details by instance id
-      operationId: getInstanceById
-      parameters:
-        - name: instanceId
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/InstanceId'
-      responses:
-        '200':
-          description: Instance details object
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Instance'
-        '400':
-          $ref: '#/components/responses/InvalidInput'
-        '401':
-          $ref: '#/components/responses/UnauthorizedError'
-        '404':
-          description: Instance was not found
-      summary: Get instance by id
     put:
       tags:
         - Instances
@@ -155,12 +129,6 @@ paths:
         Note: To remove an instance and stop charging your account, you must `delete` it. 
         Using `shutdown` will keep charging your account.
       operationId: instanceAction
-      parameters:
-        - name: instanceId
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/InstanceId'
       requestBody:
         description: 'id of instances to perform the action on, and the action type'
         required: true
@@ -200,6 +168,32 @@ paths:
         '404':
           description: One or more instances were not found
       summary: Perform action on instance
+  '/instances/{instanceId}':
+    get:
+      tags:
+        - Instances
+      description: Return instance details by instance id
+      operationId: getInstanceById
+      parameters:
+        - name: instanceId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/InstanceId'
+      responses:
+        '200':
+          description: Instance details object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Instance'
+        '400':
+          $ref: '#/components/responses/InvalidInput'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: Instance was not found
+      summary: Get instance by id
   /instances/action:
     post:
       tags:
@@ -764,6 +758,83 @@ paths:
           in: query
           name: status
           description: Return all user storage volumes with specific status
+    put:
+      summary: Perform action on volume
+      tags:
+        - Volumes
+      operationId: volumeAction
+      responses:
+        '202':
+          description: Action request was accepted
+        '400':
+          $ref: '#/components/responses/InvalidInput'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenAction'
+        '404':
+          description: Volume not found
+      description: |-
+        Perform an action on a storage volume or multiple volumes
+
+        > Available actions are: 
+        `attach`, `detach`, `delete`, `rename`, `increase-size`
+
+        Note: to attach, detach or delete a volume, the target / attached instance should be shutdown
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  oneOf:
+                    - $ref: '#/components/schemas/VolumeId'
+                    - $ref: '#/components/schemas/VolumeIds'
+                action:
+                  type: string
+                size:
+                  type: number
+                name:
+                  type: string
+                instance_id:
+                  type: string
+              required:
+                - id
+                - action
+            examples:
+              detaching a volume from an instance:
+                value:
+                  id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                  action: detach
+              attaching a volume to an instance:
+                value:
+                  id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                  action: attach
+                  instance_id: 26d43424-229e-4b45-bae2-86eb1e919514
+              deleting a volume:
+                value:
+                  id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                  action: delete
+              renaming a volume:
+                value:
+                  id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                  action: rename
+                  name: your-new-volume-name
+              increasing a volume's size:
+                value:
+                  id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                  action: increase-size
+                  size: 250
+              increasing multiple volumes size:
+                value:
+                  action: string
+                  size: 350
+                  name: string
+                  instance_id: string
+                  id:
+                    - 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    - e14cf2ab-3982-4b8f-82b9-b78393f64178
     post:
       summary: Create New Storage Volume
       tags:
@@ -822,64 +893,6 @@ paths:
         '404':
           description: Volume not found
       description: Delete a specific volume by id
-    put:
-      summary: Perform action on volume
-      tags:
-        - Volumes
-      operationId: volumeAction
-      responses:
-        '202':
-          description: Action request was accepted
-        '400':
-          $ref: '#/components/responses/InvalidInput'
-        '401':
-          $ref: '#/components/responses/UnauthorizedError'
-        '403':
-          $ref: '#/components/responses/ForbiddenAction'
-        '404':
-          description: Volume not found
-      description: |-
-        Perform an action on a storage volume
-
-        > Available actions are: 
-        `attach`, `detach`, `delete`, `rename`, `increase-size`
-
-        Note: to attach, detach or delete a volume, the target / attached instance should be shutdown
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                action:
-                  type: string
-                size:
-                  type: number
-                name:
-                  type: string
-                instance_id:
-                  type: string
-              required:
-                - action
-            examples:
-              detaching a volume from an instance:
-                value:
-                  action: detach
-              attaching a volume to an instance:
-                value:
-                  action: attach
-                  instance_id: 26d43424-229e-4b45-bae2-86eb1e919514
-              deleting a volume:
-                value:
-                  action: delete
-              renaming a volume:
-                value:
-                  action: rename
-                  name: your-new-volume-name
-              increasing a volume's size:
-                value:
-                  action: increase-size
-                  size: 250
   /volume-types:
     get:
       summary: Get Volume Types
@@ -1382,3 +1395,9 @@ components:
       items:
         $ref: '#/components/schemas/DeployVolume'
       description: An array of volumes data to deploy
+    VolumeIds:
+      title: VolumeIds
+      type: array
+      description: array of storage volume ids
+      items:
+        $ref: '#/components/schemas/VolumeId'
