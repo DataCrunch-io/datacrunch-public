@@ -1279,6 +1279,8 @@ components:
             type_id: NVMe
             location: FIN1
             is_os_volume: true
+            created_at: '2021-06-02T12:56:49.582Z'
+            target: vda
         Detached HDD Volume:
           value:
             id: ea4edc62-9838-4b7c-bd5b-862f2efec675
@@ -1289,6 +1291,8 @@ components:
             type_id: HDD
             location: FIN1
             is_os_volume: false
+            created_at: '2021-06-02T12:56:49.582Z'
+            target: null
       description: Storage volume details object
       properties:
         id:
@@ -1309,6 +1313,12 @@ components:
           $ref: '#/components/schemas/Location'
         is_os_volume:
           type: boolean
+        created_at:
+          type: string
+          format: date-time
+        target:
+          type: string
+          nullable: true
       required:
         - id
         - status
