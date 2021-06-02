@@ -253,7 +253,7 @@ paths:
           description: Forbidden Action
         '404':
           description: One or more instances were not found
-      summary: Perform action on instance
+      summary: Perform action on instance (Deprecated)
       deprecated: true
   /sshkeys:
     get:
@@ -559,7 +559,7 @@ paths:
           in: path
           description: The type of the instance to check
           required: true
-      summary: Check availability
+      summary: Check availability (Deprecated)
       deprecated: true
   /oauth2/token:
     post:
