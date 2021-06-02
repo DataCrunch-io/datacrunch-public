@@ -900,7 +900,7 @@ paths:
         '401':
           $ref: '#/components/responses/UnauthorizedError'
       operationId: getVolumeTypes
-      description: returns all volume types
+      description: Returns all volume types
   '/instance-availability/{instanceType}':
     get:
       tags:
