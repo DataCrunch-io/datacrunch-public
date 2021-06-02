@@ -1423,7 +1423,6 @@ components:
             name: My-Detached-Volume
             size: 40
             type: NVMe
-            instance_id: null
       properties:
         name:
           type: string
@@ -1435,7 +1434,6 @@ components:
         instance_id:
           type: string
           format: uuid
-          nullable: true
         is_os_volume:
           type: boolean
       required:
