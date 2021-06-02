@@ -906,12 +906,18 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/VolumeType'
+                  $ref: '#/components/schemas/VolumeTypeDetails'
               examples:
-                example-1:
+                example:
                   value:
-                    - NVMe
-                    - HDD
+                    - type: NVMe
+                      price:
+                        currency: usd
+                        price_per_month_per_gb: 0.2
+                    - type: HDD
+                      price:
+                        currency: usd
+                        price_per_month_per_gb: 0.05
         '401':
           $ref: '#/components/responses/UnauthorizedError'
       operationId: getVolumeTypes
@@ -1236,8 +1242,11 @@ components:
       title: Currency
       default: usd
       x-examples:
-        usd: usd
+        usd:
+          value: usd
       description: currency type
+      enum:
+        - usd
     VolumeStatus:
       type: string
       title: VolumeStatus
@@ -1319,18 +1328,33 @@ components:
       format: uuid
       x-tags:
         - Volume
-    VolumeType:
-      type: string
-      title: VolumeType
-      enum:
-        - NVMe
-        - HDD
+    VolumeTypeDetails:
+      type: object
+      title: VolumeTypeDetails
       x-examples:
         NVMe:
-          value: NVMe
+          value:
+            type: NVMe
+            price:
+              currency: usd
+              price_per_month_per_gb: 0.2
         HDD:
-          value: HDD
-      description: storage volume type
+          value:
+            type: HDD
+            price:
+              currency: usd
+              price_per_month_per_gb: 0.05
+      description: storage volume type details
+      properties:
+        type:
+          $ref: '#/components/schemas/VolumeType'
+        price:
+          type: object
+          properties:
+            currency:
+              $ref: '#/components/schemas/Currency'
+            price_per_month_per_gb:
+              type: number
     Volumes:
       title: Volumes
       type: array
@@ -1403,3 +1427,15 @@ components:
       description: array of storage volume ids
       items:
         $ref: '#/components/schemas/VolumeId'
+    VolumeType:
+      type: string
+      title: VolumeType
+      enum:
+        - NVMe
+        - HDD
+      x-examples:
+        NVMe:
+          value: NVMe
+        HDD:
+          value: HDD
+      description: storage volume type
