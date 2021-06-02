@@ -904,12 +904,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/VolumeType'
+                type: array
+                items:
+                  $ref: '#/components/schemas/VolumeType'
               examples:
-                NVMe:
-                  value: NVMe
-                HDD:
-                  value: HDD
+                example-1:
+                  value:
+                    - NVMe
+                    - HDD
         '401':
           $ref: '#/components/responses/UnauthorizedError'
       operationId: getVolumeTypes
