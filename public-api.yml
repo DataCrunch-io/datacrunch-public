@@ -870,6 +870,23 @@ paths:
       responses:
         '200':
           description: Volume details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Volume'
+              examples:
+                example-1:
+                  value:
+                    id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    status: attached
+                    instance_id: 39cb11a5-6485-4671-b5ac-627eca0cfbc4
+                    name: my-volume
+                    size: 40
+                    type: NVMe
+                    location: FIN1
+                    is_os_volume: true
+                    created_at: '2019-08-24T14:15:22Z'
+                    target: vda
         '400':
           $ref: '#/components/responses/InvalidInput'
         '401':
