@@ -67,6 +67,7 @@ paths:
         `FIN1`
 
         You can also add a startup script, but it's an optional field.
+        It's also possible to define new volumes that will be created and attached to the new instance. New volumes location will be the same as the instance.
 
         Instance hostname and description are mandatory.
       operationId: deployInstance
@@ -99,6 +100,19 @@ paths:
                   hostname: OiUkkoYlijumala
                   description: test instance
                   location: FIN1
+              deploy a single instance with an extra new volume:
+                value:
+                  instance_type: 8V100.48M
+                  image: ubuntu-18.04
+                  ssh_key_ids: 26d43424-229e-4b45-bae2-86eb1e919514
+                  startup_script_id: 26d43424-229e-4b45-bae2-86eb1e919514
+                  hostname: UKKO-6
+                  description: server for running lightning models
+                  location: FIN1
+                  volumes:
+                    - name: main-storage
+                      size: 200
+                      type: NVMe
       responses:
         '202':
           description: 'Accepted, Instance is in process for deployment. Returns the instance ID'
