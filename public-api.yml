@@ -143,7 +143,7 @@ paths:
         Note: To remove an instance and stop charging your account, you must `delete` it. 
         Using `shutdown` will keep charging your account.
 
-        When deleting an instance, you can specify which of it's attached volumes to delete by providing `volume_ids` array. 
+        When deleting an instance, you can specify which of it's attached volumes will be deleted by providing `volume_ids` array. 
         Any attached volumes that are not specified in the array would be detached.
         Note: If not providing a `volume_ids` array, only the OS volume will be deleted and the rest detached.
       operationId: instanceAction
@@ -239,7 +239,7 @@ paths:
         Note: To remove an instance and stop charging your account, you must `delete` it. 
         Using `shutdown` will keep charging your account.
 
-        When deleting an instance, you can specify which of it's attached volumes to delete by providing `volume_ids` array. 
+        When deleting an instance, you can specify which of it's attached volumes will be deleted by providing `volume_ids` array. 
         Any attached volumes that are not specified in the array would be detached.
         Note: If not providing a `volume_ids` array, only the OS volume will be deleted and the rest detached.
       operationId: instanceActionDeprecated
