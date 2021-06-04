@@ -182,7 +182,7 @@ paths:
               delete an instance and 2 of it's volumes:
                 value:
                   id: 08458253-6954-4964-aec3-4084f509e05d
-                  action: start
+                  action: delete
                   volume_ids:
                     - 497f6eca-6276-4993-bfeb-53cbbbba6f08
                     - 663f28a8-70c7-434f-8ab6-73b9c89a8c79
@@ -234,10 +234,14 @@ paths:
         > Available actions are: 
         `start`,`shutdown`,`hibernate`,`restore`,`delete`
 
-        Note: to `hibernate` an instance, you must first `shutdown` it.
+        Note: to `hibernate` an instance, you must first `shutdown` it. All instance volumes would be detached and the instance will be deleted.
 
         Note: To remove an instance and stop charging your account, you must `delete` it. 
         Using `shutdown` will keep charging your account.
+
+        When deleting an instance, you can specify which of it's attached volumes to delete by providing `volume_ids` array. 
+        Any attached volumes that are not specified in the array would be detached.
+        Note: If not providing a `volume_ids` array, only the OS volume will be deleted and the rest detached.
       operationId: instanceActionDeprecated
       requestBody:
         description: 'id of instances to perform the action on, and the action type'
@@ -253,6 +257,11 @@ paths:
                     - $ref: '#/components/schemas/InstanceIds'
                 action:
                   $ref: '#/components/schemas/ActionType'
+                volume_ids:
+                  $ref: '#/components/schemas/VolumeIds'
+              required:
+                - id
+                - action
             examples:
               perform an action on a single instance:
                 summary: perform an action on a single instance
@@ -266,6 +275,13 @@ paths:
                     - 26d43424-229e-4b45-bae2-86eb1e919514
                     - d40707e1-b0e0-43d0-a3a6-22457f91f906
                   action: shutdown
+              delete an instance with 2 of it's volumes:
+                value:
+                  id: 08458253-6954-4964-aec3-4084f509e05d
+                  action: delete
+                  volume_ids:
+                    - 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    - 663f28a8-70c7-434f-8ab6-73b9c89a8c79
       responses:
         '202':
           description: Action accepted and will be performed
