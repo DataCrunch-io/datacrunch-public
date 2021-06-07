@@ -69,10 +69,12 @@ paths:
         You can also add a startup script, but it's an optional field.
         It's also possible to define new volumes that will be created and attached to the new instance. New volumes location will be the same as the instance.
 
+        Existing detached OS volumes could be used as an image, put the volume id as the image value.
+
         Instance hostname and description are mandatory.
       operationId: deployInstance
       requestBody:
-        description: An instance object
+        description: An instance deployment details object
         required: true
         content:
           application/json:
@@ -113,6 +115,15 @@ paths:
                     - name: main-storage
                       size: 200
                       type: NVMe
+              deploy instance with an existing OS volume as an image:
+                value:
+                  instance_type: 8V100.48M
+                  image: bc98750d-1ade-49ef-9a41-a905ac8295f8
+                  ssh_key_ids: 26d43424-229e-4b45-bae2-86eb1e919514
+                  startup_script_id: 26d43424-229e-4b45-bae2-86eb1e919514
+                  hostname: string
+                  description: string
+                  location: FIN1
       responses:
         '202':
           description: 'Accepted, Instance is in process for deployment. Returns the instance ID'
@@ -1236,11 +1247,31 @@ components:
     DeployInstance:
       type: object
       description: an object describing an instance to deploy
+      x-examples:
+        deploy instance with 2 volumes:
+          value:
+            instance_type: 8V100.48M
+            image: ubuntu-18.04
+            ssh_key_ids: 26d43424-229e-4b45-bae2-86eb1e919514
+            startup_script_id: 26d43424-229e-4b45-bae2-86eb1e919514
+            hostname: string
+            description: string
+            location: FIN1
+            volumes:
+              - name: os-volume
+                size: 50
+                type: NVMe
+                is_os_volume: true
+              - name: large-storage
+                size: 500
+                type: HDD
       properties:
         instance_type:
           $ref: '#/components/schemas/InstanceType'
         image:
-          $ref: '#/components/schemas/Image'
+          oneOf:
+            - $ref: '#/components/schemas/Image'
+            - $ref: '#/components/schemas/VolumeId'
         ssh_key_ids:
           oneOf:
             - $ref: '#/components/schemas/sshKeyId'
@@ -1264,24 +1295,6 @@ components:
         - hostname
         - description
         - location
-      x-examples:
-        deploy instance with 2 volumes:
-          value:
-            instance_type: 8V100.48M
-            image: ubuntu-18.04
-            ssh_key_ids: 26d43424-229e-4b45-bae2-86eb1e919514
-            startup_script_id: 26d43424-229e-4b45-bae2-86eb1e919514
-            hostname: string
-            description: string
-            location: FIN1
-            volumes:
-              - name: os-volume
-                size: 50
-                type: NVMe
-                is_os_volume: true
-              - name: large-storage
-                size: 500
-                type: HDD
     Location:
       type: string
       title: Location
