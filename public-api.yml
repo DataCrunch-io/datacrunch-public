@@ -913,7 +913,7 @@ paths:
             schema:
               $ref: '#/components/schemas/DeployVolume'
             examples:
-              example-1:
+              create volume:
                 value:
                   name: volume1
                   size: 40
