@@ -63,13 +63,13 @@ paths:
         The following images types are available:
         `ubuntu-18.04`,`ubuntu-20.04`,`ubuntu-20.04-cuda-11.2`,`fastai`
 
+        Existing detached OS volumes could be used as an image, put the volume id as the image value.
+
         The following locations are availabe:
         `FIN1`
 
         You can also add a startup script, but it's an optional field.
         It's also possible to define new volumes that will be created and attached to the new instance. New volumes location will be the same as the instance.
-
-        Existing detached OS volumes could be used as an image, put the volume id as the image value.
 
         Instance hostname and description are mandatory.
       operationId: deployInstance
