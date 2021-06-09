@@ -23,6 +23,7 @@ tags:
   - name: Authentication
   - name: Images
   - name: Instance Types
+  - name: Volumes
 paths:
   /instances:
     get:
@@ -47,7 +48,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Instances'
         '400':
-          description: Invalid input
+          $ref: '#/components/responses/InvalidInput'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
     post:
@@ -56,21 +57,33 @@ paths:
       description: |-
         Deploy a new instance. Before deploying an instance, you need to add at least ssh key to be able to access your instance.
 
-        You can select one of the following [instance types](https://datacrunch.io/products/): 
+        You can select one of the following [instance types](https://datacrunch.io/products/):
+
+        Tesla V100:
         `8V100.48M`,`8V100.48V`,`4V100.20V`,`2V100.10V`,`1V100.6V`
 
+        RTX A6000:
+        `8A6000.80V`, `1A6000.10V`
+
+        CPU Nodes:
+        `CPU.32V`, `CPU.16V`, `CPU.8V`, `CPU.4V`
+
+
         The following images types are available:
-        `ubuntu-16.04`,`ubuntu-18.04`,`ubuntu-20.04`,`ubuntu-18.04-cuda-10.2`,`ubuntu-20.04-cuda-11.0`,`centos-7`,`centos-8`,`fastai`
+        `ubuntu-18.04`,`ubuntu-20.04`,`ubuntu-20.04-cuda-11.2`,`fastai`
+
+        Existing detached OS volumes could be used as an image, put the volume id as the image value.
 
         The following locations are availabe:
         `FIN1`
 
         You can also add a startup script, but it's an optional field.
+        It's also possible to define new volumes that will be created and attached to the new instance. New volumes location will be the same as the instance.
 
         Instance hostname and description are mandatory.
       operationId: deployInstance
       requestBody:
-        description: An instance object
+        description: An instance deployment details object
         required: true
         content:
           application/json:
@@ -98,6 +111,28 @@ paths:
                   hostname: OiUkkoYlijumala
                   description: test instance
                   location: FIN1
+              deploy a single instance with an extra new volume:
+                value:
+                  instance_type: 8V100.48M
+                  image: ubuntu-18.04
+                  ssh_key_ids: 26d43424-229e-4b45-bae2-86eb1e919514
+                  startup_script_id: 26d43424-229e-4b45-bae2-86eb1e919514
+                  hostname: UKKO-6
+                  description: server for running lightning models
+                  location: FIN1
+                  volumes:
+                    - name: main-storage
+                      size: 200
+                      type: NVMe
+              deploy instance with an existing OS volume as an image:
+                value:
+                  instance_type: 8V100.48M
+                  image: bc98750d-1ade-49ef-9a41-a905ac8295f8
+                  ssh_key_ids: 26d43424-229e-4b45-bae2-86eb1e919514
+                  startup_script_id: 26d43424-229e-4b45-bae2-86eb1e919514
+                  hostname: string
+                  description: string
+                  location: FIN1
       responses:
         '202':
           description: 'Accepted, Instance is in process for deployment. Returns the instance ID'
@@ -114,6 +149,75 @@ paths:
         '503':
           description: Not enough resources at the moment
       summary: Deploy new instance
+    put:
+      tags:
+        - Instances
+      description: |-
+        Perform an action on a deployed instance or multiple instances.
+
+        > Available actions are: 
+        `start`,`shutdown`,`hibernate`,`restore`,`delete`
+
+        Note: to `hibernate` an instance, you must first `shutdown` it. All instance volumes would be detached and the instance will be deleted.
+
+        Note: To remove an instance and stop charging your account, you must `delete` it. 
+        Using `shutdown` will keep charging your account.
+
+        When deleting an instance, you can specify which of it's attached volumes will be deleted by providing `volume_ids` array. 
+        Any attached volumes that are not specified in the array would be detached.
+        Note: If not providing a `volume_ids` array, only the OS volume will be deleted and the rest detached.
+      operationId: instanceAction
+      requestBody:
+        description: 'id of instances to perform the action on, and the action type'
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  oneOf:
+                    - $ref: '#/components/schemas/InstanceId'
+                    - $ref: '#/components/schemas/InstanceIds'
+                action:
+                  $ref: '#/components/schemas/ActionType'
+                volume_ids:
+                  $ref: '#/components/schemas/VolumeIds'
+              required:
+                - id
+                - action
+            examples:
+              perform an action on a single instance:
+                summary: perform an action on a single instance
+                value:
+                  id: 26d43424-229e-4b45-bae2-86eb1e919514
+                  action: start
+              perform an action on multiple instances:
+                summary: perform an action on multiple instances
+                value:
+                  id:
+                    - 26d43424-229e-4b45-bae2-86eb1e919514
+                    - d40707e1-b0e0-43d0-a3a6-22457f91f906
+                  action: shutdown
+              delete an instance and 2 of it's volumes:
+                value:
+                  id: 08458253-6954-4964-aec3-4084f509e05d
+                  action: delete
+                  volume_ids:
+                    - 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    - 663f28a8-70c7-434f-8ab6-73b9c89a8c79
+      responses:
+        '202':
+          description: Action accepted and will be performed
+        '400':
+          $ref: '#/components/responses/InvalidInput'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenAction'
+        '404':
+          description: One or more instances were not found
+      summary: Perform action on instance
   '/instances/{instanceId}':
     get:
       tags:
@@ -134,7 +238,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Instance'
         '400':
-          description: Invalid input
+          $ref: '#/components/responses/InvalidInput'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
         '404':
@@ -150,11 +254,15 @@ paths:
         > Available actions are: 
         `start`,`shutdown`,`hibernate`,`restore`,`delete`
 
-        Note: to `hibernate` an instance, you must first `shutdown` it.
+        Note: to `hibernate` an instance, you must first `shutdown` it. All instance volumes would be detached and the instance will be deleted.
 
         Note: To remove an instance and stop charging your account, you must `delete` it. 
         Using `shutdown` will keep charging your account.
-      operationId: instanceAction
+
+        When deleting an instance, you can specify which of it's attached volumes will be deleted by providing `volume_ids` array. 
+        Any attached volumes that are not specified in the array would be detached.
+        Note: If not providing a `volume_ids` array, only the OS volume will be deleted and the rest detached.
+      operationId: instanceActionDeprecated
       requestBody:
         description: 'id of instances to perform the action on, and the action type'
         required: true
@@ -169,6 +277,11 @@ paths:
                     - $ref: '#/components/schemas/InstanceIds'
                 action:
                   $ref: '#/components/schemas/ActionType'
+                volume_ids:
+                  $ref: '#/components/schemas/VolumeIds'
+              required:
+                - id
+                - action
             examples:
               perform an action on a single instance:
                 summary: perform an action on a single instance
@@ -182,6 +295,13 @@ paths:
                     - 26d43424-229e-4b45-bae2-86eb1e919514
                     - d40707e1-b0e0-43d0-a3a6-22457f91f906
                   action: shutdown
+              delete an instance with 2 of it's volumes:
+                value:
+                  id: 08458253-6954-4964-aec3-4084f509e05d
+                  action: delete
+                  volume_ids:
+                    - 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    - 663f28a8-70c7-434f-8ab6-73b9c89a8c79
       responses:
         '202':
           description: Action accepted and will be performed
@@ -193,7 +313,8 @@ paths:
           description: Forbidden Action
         '404':
           description: One or more instances were not found
-      summary: Perform action on instance
+      summary: Perform action on instance (Deprecated)
+      deprecated: true
   /sshkeys:
     get:
       tags:
@@ -243,7 +364,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/sshKeyId'
         '400':
-          description: Invalid input
+          $ref: '#/components/responses/InvalidInput'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
       summary: Add ssh key
@@ -273,7 +394,7 @@ paths:
         '200':
           description: ssh key(s) deleted
         '400':
-          description: Invalid input
+          $ref: '#/components/responses/InvalidInput'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
       summary: Delete ssh keys
@@ -298,7 +419,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/sshKey'
         '400':
-          description: Invalid input
+          $ref: '#/components/responses/InvalidInput'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
       summary: Get ssh key by id
@@ -317,7 +438,7 @@ paths:
         '200':
           description: ssh key deleted
         '400':
-          description: Invalid input
+          $ref: '#/components/responses/InvalidInput'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
       summary: Delete ssh key by id
@@ -375,7 +496,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/StartupScriptId'
         '400':
-          description: Invalid input
+          $ref: '#/components/responses/InvalidInput'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
       summary: Add startup script
@@ -404,6 +525,8 @@ paths:
       responses:
         '200':
           description: startup script(s) deleted
+        '400':
+          $ref: '#/components/responses/InvalidInput'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
       summary: Delete startup script
@@ -427,7 +550,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/StartupScript'
         '400':
-          description: Invalid input
+          $ref: '#/components/responses/InvalidInput'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
       summary: Get startup script by id
@@ -446,7 +569,7 @@ paths:
         '200':
           description: startup script deleted
         '400':
-          description: Invalid input
+          $ref: '#/components/responses/InvalidInput'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
       summary: Delete startup script by id
@@ -484,10 +607,10 @@ paths:
                 type: boolean
               examples: {}
         '400':
-          description: Invalid input
+          $ref: '#/components/responses/InvalidInput'
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-      operationId: getAvailability
+      operationId: getAvailabilityDeprecated
       description: Check if an instance type is available to deploy for the account
       parameters:
         - schema:
@@ -496,7 +619,8 @@ paths:
           in: path
           description: The type of the instance to check
           required: true
-      summary: Check availability
+      summary: Check availability (Deprecated)
+      deprecated: true
   /oauth2/token:
     post:
       summary: Get access token
@@ -665,6 +789,256 @@ paths:
       tags:
         - Instance Types
     parameters: []
+  /volumes:
+    get:
+      summary: Get all Storage Volumes
+      tags:
+        - Volumes
+      responses:
+        '200':
+          description: Returns an array of all the user's storage volumes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Volumes'
+              examples:
+                example-1:
+                  value:
+                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                      status: attached
+                      instance_id: string
+                      name: string
+                      size: 40
+                      type: NVMe
+                      location: FIN1
+                      is_os_volume: true
+        '400':
+          $ref: '#/components/responses/InvalidInput'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      operationId: getAllVolumes
+      description: 'Return all storage volumes of the user, or all storage volumes with a specific status (optional)'
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: status
+          description: Return all user storage volumes with specific status
+    put:
+      summary: Perform action on volume
+      tags:
+        - Volumes
+      operationId: volumeAction
+      responses:
+        '202':
+          description: Action request was accepted
+        '400':
+          $ref: '#/components/responses/InvalidInput'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenAction'
+        '404':
+          description: Volume not found
+      description: |-
+        Perform an action on a storage volume or multiple volumes
+
+        > Available actions are: 
+        `attach`, `detach`, `delete`, `rename`, `increase-size`
+
+        Note: to attach, detach or delete a volume, the target / attached instance should be shutdown
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  oneOf:
+                    - $ref: '#/components/schemas/VolumeId'
+                    - $ref: '#/components/schemas/VolumeIds'
+                action:
+                  type: string
+                size:
+                  type: number
+                name:
+                  type: string
+                instance_id:
+                  type: string
+              required:
+                - id
+                - action
+            examples:
+              detaching a volume from an instance:
+                value:
+                  id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                  action: detach
+              attaching a volume to an instance:
+                value:
+                  id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                  action: attach
+                  instance_id: 26d43424-229e-4b45-bae2-86eb1e919514
+              deleting a volume:
+                value:
+                  id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                  action: delete
+              renaming a volume:
+                value:
+                  id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                  action: rename
+                  name: your-new-volume-name
+              increasing a volume's size:
+                value:
+                  id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                  action: increase-size
+                  size: 250
+              increasing multiple volumes size:
+                value:
+                  action: string
+                  size: 350
+                  name: string
+                  instance_id: string
+                  id:
+                    - 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    - e14cf2ab-3982-4b8f-82b9-b78393f64178
+    post:
+      summary: Create New Storage Volume
+      tags:
+        - Volumes
+      operationId: createVolume
+      responses:
+        '202':
+          description: 'Accepted, volume is in being created. Returns the volume ID'
+        '400':
+          $ref: '#/components/responses/InvalidInput'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          description: Instance to attach to is not shutdown
+      description: Create a new storage volume
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeployVolume'
+            examples:
+              create volume:
+                value:
+                  name: volume1
+                  size: 40
+                  type: NVMe
+                  instance_id: 06587974-2dbe-4e10-8bf9-38cce0f5a366
+                  location: FIN1
+        description: ''
+  '/volumes/{volumeId}':
+    parameters:
+      - schema: {}
+        name: volumeId
+        in: path
+        required: true
+        description: volume id
+    get:
+      summary: Get storage volume by id
+      tags:
+        - Volumes
+      responses:
+        '200':
+          description: Volume details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Volume'
+              examples:
+                example-1:
+                  value:
+                    id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    status: attached
+                    instance_id: 39cb11a5-6485-4671-b5ac-627eca0cfbc4
+                    name: my-volume
+                    size: 40
+                    type: NVMe
+                    location: FIN1
+                    is_os_volume: true
+                    created_at: '2019-08-24T14:15:22Z'
+                    target: vda
+        '400':
+          $ref: '#/components/responses/InvalidInput'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: Volume not found
+      operationId: getVolumeById
+      description: Return a storage volume by id
+    delete:
+      summary: Delete volume by id
+      tags:
+        - Volumes
+      operationId: deleteVolumeById
+      responses:
+        '202':
+          description: Delete request accepted
+        '400':
+          $ref: '#/components/responses/InvalidInput'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: Volume not found
+      description: Delete a specific volume by id
+  /volume-types:
+    get:
+      summary: Get Volume Types
+      tags:
+        - Volumes
+      responses:
+        '200':
+          description: volume types
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VolumeTypeDetails'
+              examples:
+                example:
+                  value:
+                    - type: NVMe
+                      price:
+                        currency: usd
+                        price_per_month_per_gb: 0.2
+                    - type: HDD
+                      price:
+                        currency: usd
+                        price_per_month_per_gb: 0.05
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      operationId: getVolumeTypes
+      description: Returns all volume types
+  '/instance-availability/{instanceType}':
+    get:
+      tags:
+        - Instances
+      responses:
+        '200':
+          description: Return instance type availability - true or false
+          content:
+            application/json:
+              schema:
+                type: boolean
+              examples: {}
+        '400':
+          $ref: '#/components/responses/InvalidInput'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      operationId: getAvailability
+      description: Check if an instance type is available to deploy for the account
+      parameters:
+        - schema:
+            $ref: '#/components/schemas/InstanceType'
+          name: instanceType
+          in: path
+          description: The type of the instance to check
+          required: true
+      summary: Check availability
 components:
   securitySchemes:
     oauth2:
@@ -683,6 +1057,10 @@ components:
   responses:
     UnauthorizedError:
       description: Access token is missing or invalid
+    InvalidInput:
+      description: One or more of the inputs were invalid
+    ForbiddenAction:
+      description: The Action is forbidden
   schemas:
     StartupScriptId:
       type: string
@@ -768,11 +1146,12 @@ components:
           key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQC8orN63XfjrkUQUp7cye96/Lx/4gOfs6MzsKLCxX8ACDnXnI9eZkxXuJPr9i6Q+iXNkqcUTB9NyJnfuRx7okPFWvrpzRj3mEs9RZJQ+P3YSfblvxDe2AtRBTZtg2MP0j7afolthS6gdTfhSU+1oRSyvZz0zn0F7TCgem6vNekGLw== tuoni
     InstanceId:
       type: string
-      description: id of the instance
+      description: id of an instance
       example: 08458253-6954-4964-aec3-4084f509e05d
+      format: uuid
     InstanceIds:
       type: array
-      description: an array of instance id
+      description: an array of instance ids
       items:
         $ref: '#/components/schemas/InstanceId'
       example:
@@ -866,26 +1245,48 @@ components:
         - 4V100.20V
         - 2V100.10V
         - 1V100.6V
+        - 8A6000.80V
+        - 1A6000.10V
+        - CPU.4V
+        - CPU.8V
+        - CPU.16V
+        - CPU.32V
     Image:
       type: string
       description: the image type (operating system)
       enum:
-        - ubuntu-16.04
         - ubuntu-18.04
         - ubuntu-20.04
-        - ubuntu-18.04-cuda-10.2
-        - ubuntu-20.04-cuda-11.0
-        - centos-7
-        - centos-8
         - fastai
+        - ubuntu-20.04-cuda-11.2
     DeployInstance:
       type: object
       description: an object describing an instance to deploy
+      x-examples:
+        deploy instance with 2 volumes:
+          value:
+            instance_type: 8V100.48M
+            image: ubuntu-18.04
+            ssh_key_ids: 26d43424-229e-4b45-bae2-86eb1e919514
+            startup_script_id: 26d43424-229e-4b45-bae2-86eb1e919514
+            hostname: string
+            description: string
+            location: FIN1
+            volumes:
+              - name: os-volume
+                size: 50
+                type: NVMe
+                is_os_volume: true
+              - name: large-storage
+                size: 500
+                type: HDD
       properties:
         instance_type:
           $ref: '#/components/schemas/InstanceType'
         image:
-          $ref: '#/components/schemas/Image'
+          oneOf:
+            - $ref: '#/components/schemas/Image'
+            - $ref: '#/components/schemas/VolumeId'
         ssh_key_ids:
           oneOf:
             - $ref: '#/components/schemas/sshKeyId'
@@ -900,6 +1301,8 @@ components:
           description: the instance description. free text
         location:
           $ref: '#/components/schemas/Location'
+        volumes:
+          $ref: '#/components/schemas/DeployVolumes'
       required:
         - instance_type
         - image
@@ -913,7 +1316,8 @@ components:
       description: Datacenter Location
       default: FIN1
       x-examples:
-        Location example: FIN1
+        Location example:
+          value: FIN1
       enum:
         - FIN1
     UserBalance:
@@ -937,5 +1341,211 @@ components:
       title: Currency
       default: usd
       x-examples:
-        usd: usd
+        usd:
+          value: usd
       description: currency type
+      enum:
+        - usd
+    VolumeStatus:
+      type: string
+      title: VolumeStatus
+      enum:
+        - attached
+        - detached
+        - deleted
+        - ordered
+        - creating
+        - deleting
+      x-examples:
+        attached:
+          value: attached
+        detached:
+          value: detached
+      description: status of a storage volume
+    Volume:
+      title: Volume
+      type: object
+      x-tags:
+        - Volume
+      x-examples:
+        'Attached NVMe Volume ':
+          value:
+            id: cf995e26-ce69-4149-84a3-cdd1e100670f
+            status: attached
+            instance_id: 4fee633c-b119-4447-af9c-70ba17675fc5
+            name: Volume-nxC2tf9F
+            size: 50
+            type_id: NVMe
+            location: FIN1
+            is_os_volume: true
+            created_at: '2021-06-02T12:56:49.582Z'
+            target: vda
+        Detached HDD Volume:
+          value:
+            id: ea4edc62-9838-4b7c-bd5b-862f2efec675
+            status: detached
+            instance_id: null
+            name: Volume-iHdL4ysR
+            size: 100
+            type_id: HDD
+            location: FIN1
+            is_os_volume: false
+            created_at: '2021-06-02T12:56:49.582Z'
+            target: null
+      description: Storage volume details object
+      properties:
+        id:
+          $ref: '#/components/schemas/VolumeId'
+        status:
+          $ref: '#/components/schemas/VolumeStatus'
+        instance_id:
+          type: string
+          nullable: true
+        name:
+          type: string
+        size:
+          type: number
+          minimum: 40
+        type:
+          $ref: '#/components/schemas/VolumeType'
+        location:
+          $ref: '#/components/schemas/Location'
+        is_os_volume:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        target:
+          type: string
+          nullable: true
+      required:
+        - id
+        - status
+        - instance_id
+        - name
+        - size
+        - type
+        - location
+        - is_os_volume
+    VolumeId:
+      type: string
+      title: VolumeId
+      description: id of a storage volume
+      x-examples:
+        id:
+          value: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+      format: uuid
+      x-tags:
+        - Volume
+    VolumeTypeDetails:
+      type: object
+      title: VolumeTypeDetails
+      x-examples:
+        NVMe:
+          value:
+            type: NVMe
+            price:
+              currency: usd
+              price_per_month_per_gb: 0.2
+        HDD:
+          value:
+            type: HDD
+            price:
+              currency: usd
+              price_per_month_per_gb: 0.05
+      description: storage volume type details
+      properties:
+        type:
+          $ref: '#/components/schemas/VolumeType'
+        price:
+          type: object
+          properties:
+            currency:
+              $ref: '#/components/schemas/Currency'
+            price_per_month_per_gb:
+              type: number
+    Volumes:
+      title: Volumes
+      type: array
+      description: Array of storage volume objects
+      items:
+        $ref: '#/components/schemas/Volume'
+      x-examples:
+        Array of user volumes:
+          value:
+            - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+              status: attached
+              instance_id: string
+              name: Volume-nxC2tf9F
+              size: 0
+              type_id: NVMe
+              location: FIN1
+              is_os_volume: true
+            - id: ea4edc62-9838-4b7c-bd5b-862f2efec675
+              status: detached
+              instance_id: null
+              name: Volume-iHdL4ysR
+              size: 100
+              type_id: HDD
+              location: FIN1
+              is_os_volume: false
+    DeployVolume:
+      title: DeployVolume
+      type: object
+      description: an object describing a volume to deploy
+      x-examples:
+        'A volume to deploy, with offline instance id to detach to':
+          value:
+            name: My-Volume
+            size: 40
+            type: NVMe
+            instance_id: 06587974-2dbe-4e10-8bf9-38cce0f5a366
+        'A volume to deploy, with no instance to attach to, volume will be detached':
+          value:
+            name: My-Detached-Volume
+            size: 40
+            type: NVMe
+      properties:
+        name:
+          type: string
+          maxLength: 60
+        size:
+          type: number
+          minimum: 40
+        type:
+          $ref: '#/components/schemas/VolumeType'
+        instance_id:
+          type: string
+          format: uuid
+        is_os_volume:
+          type: boolean
+        location:
+          $ref: '#/components/schemas/Location'
+      required:
+        - name
+        - size
+        - type
+    DeployVolumes:
+      title: DeployVolumes
+      type: array
+      items:
+        $ref: '#/components/schemas/DeployVolume'
+      description: An array of volumes data to deploy
+    VolumeIds:
+      title: VolumeIds
+      type: array
+      description: array of storage volume ids
+      items:
+        $ref: '#/components/schemas/VolumeId'
+    VolumeType:
+      type: string
+      title: VolumeType
+      enum:
+        - NVMe
+        - HDD
+      x-examples:
+        NVMe:
+          value: NVMe
+        HDD:
+          value: HDD
+      description: storage volume type
