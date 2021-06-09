@@ -57,8 +57,17 @@ paths:
       description: |-
         Deploy a new instance. Before deploying an instance, you need to add at least ssh key to be able to access your instance.
 
-        You can select one of the following [instance types](https://datacrunch.io/products/): 
+        You can select one of the following [instance types](https://datacrunch.io/products/):
+
+        Tesla V100:
         `8V100.48M`,`8V100.48V`,`4V100.20V`,`2V100.10V`,`1V100.6V`
+
+        RTX A6000:
+        `8A6000.80V`, `1A6000.10V`
+
+        CPU Nodes:
+        `CPU.32V`, `CPU.16V`, `CPU.8V`, `CPU.4V`
+
 
         The following images types are available:
         `ubuntu-18.04`,`ubuntu-20.04`,`ubuntu-20.04-cuda-11.2`,`fastai`
@@ -1236,6 +1245,12 @@ components:
         - 4V100.20V
         - 2V100.10V
         - 1V100.6V
+        - 8A6000.80V
+        - 1A6000.10V
+        - CPU.4V
+        - CPU.8V
+        - CPU.16V
+        - CPU.32V
     Image:
       type: string
       description: the image type (operating system)
