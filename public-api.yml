@@ -1365,8 +1365,6 @@ components:
     Volume:
       title: Volume
       type: object
-      x-tags:
-        - Volume
       x-examples:
         'Attached NVMe Volume ':
           value:
@@ -1435,8 +1433,6 @@ components:
         id:
           value: 497f6eca-6276-4993-bfeb-53cbbbba6f08
       format: uuid
-      x-tags:
-        - Volume
     VolumeTypeDetails:
       type: object
       title: VolumeTypeDetails
