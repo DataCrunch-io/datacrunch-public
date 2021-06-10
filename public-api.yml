@@ -1513,8 +1513,6 @@ components:
         instance_id:
           type: string
           format: uuid
-        is_os_volume:
-          type: boolean
         location:
           $ref: '#/components/schemas/Location'
       required:
