@@ -804,14 +804,26 @@ paths:
               examples:
                 example-1:
                   value:
-                    - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
+                    - id: cf995e26-ce69-4149-84a3-cdd1e100670f
                       status: attached
-                      instance_id: string
-                      name: string
-                      size: 40
-                      type: NVMe
+                      instance_id: 4fee633c-b119-4447-af9c-70ba17675fc5
+                      name: Volume-nxC2tf9F
+                      size: 50
+                      type_id: NVMe
                       location: FIN1
                       is_os_volume: true
+                      created_at: '2021-06-02T12:56:49.582Z'
+                      target: vda
+                    - id: ea4edc62-9838-4b7c-bd5b-862f2efec675
+                      status: detached
+                      instance_id: null
+                      name: Volume-iHdL4ysR
+                      size: 100
+                      type_id: HDD
+                      location: FIN1
+                      is_os_volume: false
+                      created_at: '2021-06-02T12:56:49.582Z'
+                      target: null
         '400':
           $ref: '#/components/responses/InvalidInput'
         '401':
@@ -1471,9 +1483,9 @@ components:
           value:
             - id: 497f6eca-6276-4993-bfeb-53cbbbba6f08
               status: attached
-              instance_id: string
+              instance_id: 92bb12b0-7c43-4fa2-bfd3-125744960b30
               name: Volume-nxC2tf9F
-              size: 0
+              size: 50
               type_id: NVMe
               location: FIN1
               is_os_volume: true
