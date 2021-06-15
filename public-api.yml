@@ -1225,6 +1225,15 @@ components:
           $ref: '#/components/schemas/StartupScriptId'
         ssh_key_ids:
           $ref: '#/components/schemas/sshKeyIds'
+        os_volume_id:
+          $ref: '#/components/schemas/VolumeId'
+        gpu_memory:
+          type: object
+          properties:
+            description:
+              type: string
+            size_in_gigabytes:
+              type: number
     Instances:
       type: array
       description: an array of Instance details objects
