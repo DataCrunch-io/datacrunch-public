@@ -65,12 +65,15 @@ paths:
         RTX A6000:
         `8A6000.80V`, `1A6000.10V`
 
+        RTX A100:
+        `4A100.88V`, `1A100.22V`
+
         CPU Nodes:
         `CPU.32V`, `CPU.16V`, `CPU.8V`, `CPU.4V`
 
 
         The following images types are available:
-        `ubuntu-18.04`,`ubuntu-20.04`,`ubuntu-20.04-cuda-11.2`,`fastai`
+        `ubuntu-18.04`, `ubuntu-20.04`, `ubuntu-20.04-cuda-11.1`, `ubuntu-20.04-cuda-11.4`, `fastai`
 
         Existing detached OS volumes could be used as an image, put the volume id as the image value.
 
