@@ -136,6 +136,17 @@ paths:
                   hostname: string
                   description: string
                   location: FIN1
+              deploy an instance with custom OS volume size and name:
+                instance_type: 8V100.48M
+                image: ubuntu-18.04
+                ssh_key_ids: 26d43424-229e-4b45-bae2-86eb1e919514
+                startup_script_id: 26d43424-229e-4b45-bae2-86eb1e919514
+                hostname: string
+                description: string
+                location: FIN1
+                os_volume:
+                  name: OS Volume
+                  size: 150
       responses:
         '202':
           description: 'Accepted, Instance is in process for deployment. Returns the instance ID'
@@ -1287,7 +1298,7 @@ components:
       type: object
       description: an object describing an instance to deploy
       x-examples:
-        deploy instance with 2 volumes:
+        deploy instance with 2 extra volumes and custom OS volume:
           value:
             instance_type: 8V100.48M
             image: ubuntu-18.04
@@ -1296,11 +1307,13 @@ components:
             hostname: string
             description: string
             location: FIN1
+            os_volume:
+              name: OS Volume
+              size: 100
             volumes:
-              - name: os-volume
+              - name: small-storage
                 size: 50
                 type: NVMe
-                is_os_volume: true
               - name: large-storage
                 size: 500
                 type: HDD
@@ -1327,6 +1340,16 @@ components:
           $ref: '#/components/schemas/Location'
         volumes:
           $ref: '#/components/schemas/DeployVolumes'
+        os_volume:
+          type: object
+          properties:
+            name:
+              type: string
+            size:
+              type: string
+          required:
+            - name
+            - size
       required:
         - instance_type
         - image
