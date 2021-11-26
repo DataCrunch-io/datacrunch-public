@@ -170,7 +170,7 @@ paths:
         Perform an action on a deployed instance or multiple instances.
 
         > Available actions are: 
-        `start`,`shutdown`,`hibernate`,`restore`,`delete`
+        `start`,`shutdown`,`hibernate`,`delete`
 
         Note: to `hibernate` an instance, you must first `shutdown` it. All instance volumes would be detached and the instance will be deleted.
 
@@ -266,7 +266,7 @@ paths:
         Perform an action on a deployed instance or multiple instances.
 
         > Available actions are: 
-        `start`,`shutdown`,`hibernate`,`restore`,`delete`
+        `start`,`shutdown`,`hibernate`,`delete`
 
         Note: to `hibernate` an instance, you must first `shutdown` it. All instance volumes would be detached and the instance will be deleted.
 
