@@ -802,6 +802,7 @@ paths:
       description: Return all instances types
       tags:
         - Instance Types
+      security: []
     parameters: []
   /volumes:
     get:
