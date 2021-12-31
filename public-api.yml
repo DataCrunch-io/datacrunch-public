@@ -66,7 +66,7 @@ paths:
         `8A6000.80V`, `1A6000.10V`
 
         A100:
-        `4A100.88V`, `1A100.22V`
+        `8A100.176V`, `4A100.88V`, `2A100.44V`, `1A100.22V`
 
         CPU Nodes:
         `CPU.32V`, `CPU.16V`, `CPU.8V`, `CPU.4V`
@@ -137,16 +137,17 @@ paths:
                   description: string
                   location: FIN1
               deploy an instance with custom OS volume size and name:
-                instance_type: 8V100.48M
-                image: ubuntu-18.04
-                ssh_key_ids: 26d43424-229e-4b45-bae2-86eb1e919514
-                startup_script_id: 26d43424-229e-4b45-bae2-86eb1e919514
-                hostname: string
-                description: string
-                location: FIN1
-                os_volume:
-                  name: OS Volume
-                  size: 150
+                value:
+                  instance_type: 8V100.48M
+                  image: ubuntu-18.04
+                  ssh_key_ids: 26d43424-229e-4b45-bae2-86eb1e919514
+                  startup_script_id: 26d43424-229e-4b45-bae2-86eb1e919514
+                  hostname: string
+                  description: string
+                  location: FIN1
+                  os_volume:
+                    name: OS Volume
+                    size: 150
       responses:
         '202':
           description: 'Accepted, Instance is in process for deployment. Returns the instance ID'
@@ -1346,7 +1347,7 @@ components:
             name:
               type: string
             size:
-              type: string
+              type: integer
           required:
             - name
             - size
