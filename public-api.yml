@@ -803,6 +803,7 @@ paths:
       description: Return all instances types
       tags:
         - Instance Types
+      security: []
     parameters: []
   /volumes:
     get:
@@ -1318,6 +1319,7 @@ components:
               - name: large-storage
                 size: 500
                 type: HDD
+      title: ''
       properties:
         instance_type:
           $ref: '#/components/schemas/InstanceType'
@@ -1329,6 +1331,7 @@ components:
           oneOf:
             - $ref: '#/components/schemas/sshKeyId'
             - $ref: '#/components/schemas/sshKeyIds'
+          description: 'when image value is OS volumeId, ssh_key_ids can be optional.'
         startup_script_id:
           $ref: '#/components/schemas/StartupScriptId'
         hostname:
@@ -1464,6 +1467,9 @@ components:
         target:
           type: string
           nullable: true
+        ssh_key_ids:
+          type: array
+          items: {}
       required:
         - id
         - status
