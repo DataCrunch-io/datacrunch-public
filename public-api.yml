@@ -1067,6 +1067,29 @@ paths:
           description: The type of the instance to check
           required: true
       summary: Check availability
+  /ai/completions:
+    parameters: []
+    post:
+      summary: ''
+      operationId: post-ai-completions
+      responses:
+        '200':
+          description: OK
+      description: Creates a text completion request for the provided prompt and paramete
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AITextCompletionRequest'
+            examples:
+              gpt-neox-20b:
+                value:
+                  model: gpt-neox-20b
+                  prompt: What is 18857 - 592?
+                  max_tokens: 3
+                  temperature: 1.2
+                  top_k: 40
+                  top_p: 0.5
 components:
   securitySchemes:
     oauth2:
@@ -1597,3 +1620,102 @@ components:
         HDD:
           value: HDD
       description: storage volume type
+    AITextCompletionRequest:
+      type: object
+      x-examples:
+        gpt-neox-20b:
+          model: gpt-neox-20b
+          prompt: What is 18857 - 592?
+          max_tokens: 3
+          temperature: 1.2
+          top_k: 40
+          top_p: 0.5
+      properties:
+        model:
+          type: string
+          description: 'ID of the model to use. We only allow two models ("gpt-neox-20b" and "bloom-176b") in the current beta stage. '
+        prompt:
+          type: string
+          description: 'The prompt(s) to generate completions for, encoded as a string'
+        max_tokens:
+          type: integer
+          description: The maximum number of tokens to generate in the completion.
+        temperature:
+          type: number
+          description: |-
+            What sampling temperature to use. Higher values means the model will take more risks. Try 0.9 for more creative applications, and 0 (argmax sampling) for ones with a well-defined answer.
+
+            We generally recommend altering this or top_p but not both.
+        top_k:
+          type: integer
+        top_p:
+          type: number
+          description: |-
+            An alternative to sampling with temperature, called nucleus sampling, where the model considers the results of the tokens with top_p probability mass. So 0.1 means only the tokens comprising the top 10% probability mass are considered.
+
+            We generally recommend altering this or temperature but not both
+      required:
+        - model
+        - prompt
+    AITextCompletionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+        status:
+          type: string
+        category:
+          type: string
+        model:
+          type: string
+        input:
+          type: object
+          properties:
+            prompt:
+              type: string
+            max_tokens:
+              type: integer
+            temperature:
+              type: number
+            top_k:
+              type: integer
+            top_p:
+              type: number
+        choices:
+          type: object
+          properties:
+            error:
+              type: boolean
+            results:
+              type: object
+              properties:
+                generated_text:
+                  type: string
+        error:
+          type: 'null'
+      x-examples:
+        gpt-neox-20b-response:
+          id: 3a2a2c16-8aed-4b05-84f5-4e46f233e889
+          createdAt: '2022-08-01T13:37:34.346Z'
+          updatedAt: '2022-08-01T13:37:34.346Z'
+          status: completed
+          category: text_completions
+          model: gpt-neox-20b
+          input:
+            prompt: What is 18857 - 592?
+            max_tokens: 3
+            temperature: 1.2
+            top_k: 40
+            top_p: 0.5
+          choices:
+            error: false
+            results:
+              generated_text: |-
+                What is 18857 - 592?
+                18165
+          error: null
+      title: ''
