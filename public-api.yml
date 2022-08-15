@@ -1663,6 +1663,28 @@ components:
         - prompt
     AITextCompletionResponse:
       type: object
+      x-examples:
+        gpt-neox-20b-res:
+          id: fc19233e-528f-46cb-8c6c-9a51b706c8cf
+          createdAt: '2022-08-12T17:09:21.872Z'
+          updatedAt: '2022-08-12T17:09:22.335Z'
+          status: completed
+          category: text_completions
+          model: gpt-neox-20b
+          input:
+            prompt: What is 18857 - 592?
+            max_tokens: 3
+            temperature: 1.2
+            top_k: 40
+            top_p: 0.5
+          choices:
+            - error: false
+              results:
+                generated_text: '18264'
+                prompt_text: What is 18857 - 592?
+                elapsed_time: 0.12441420555114746
+                num_tokens_generated: 3
+          error: null
       properties:
         id:
           type: string
@@ -1689,6 +1711,7 @@ components:
               type: integer
             top_p:
               type: number
+              description: model inference results.
         choices:
           type: array
           items:
@@ -1708,26 +1731,4 @@ components:
                   num_tokens_generated:
                     type: integer
         error:
-          type: 'null'
-      x-examples:
-        gpt-neox-20b-res:
-          id: fc19233e-528f-46cb-8c6c-9a51b706c8cf
-          createdAt: '2022-08-12T17:09:21.872Z'
-          updatedAt: '2022-08-12T17:09:22.335Z'
-          status: completed
-          category: text_completions
-          model: gpt-neox-20b
-          input:
-            prompt: What is 18857 - 592?
-            max_tokens: 3
-            temperature: 1.2
-            top_k: 40
-            top_p: 0.5
-          choices:
-            - error: false
-              results:
-                generated_text: '18264'
-                prompt_text: What is 18857 - 592?
-                elapsed_time: 0.12441420555114746
-                num_tokens_generated: 3
-          error: null
+          nullable: true
