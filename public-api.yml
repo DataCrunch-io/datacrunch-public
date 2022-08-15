@@ -1109,6 +1109,36 @@ paths:
                           elapsed_time: 0.12441420555114746
                           num_tokens_generated: 3
                     error: null
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  statusCode:
+                    type: integer
+                  message:
+                    type: array
+                    items:
+                      type: string
+                  error:
+                    type: string
+                x-examples:
+                  example-1:
+                    statusCode: 400
+                    message:
+                      - Timeout has occurred
+                    error: Bad Request
+              examples:
+                example-1:
+                  value:
+                    statusCode: 403
+                    message:
+                      - Invalid model name
+                    error: Bad Request
+        '401':
+          description: Unauthorized
       description: Creates a text completion request for the provided prompt and paramete
       requestBody:
         content:
