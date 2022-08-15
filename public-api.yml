@@ -1075,6 +1075,10 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: object
       description: Creates a text completion request for the provided prompt and paramete
       requestBody:
         content:
@@ -1686,22 +1690,30 @@ components:
             top_p:
               type: number
         choices:
-          type: object
-          properties:
-            error:
-              type: boolean
-            results:
-              type: object
-              properties:
-                generated_text:
-                  type: string
+          type: array
+          items:
+            type: object
+            properties:
+              error:
+                type: boolean
+              results:
+                type: object
+                properties:
+                  generated_text:
+                    type: string
+                  prompt_text:
+                    type: string
+                  elapsed_time:
+                    type: number
+                  num_tokens_generated:
+                    type: integer
         error:
           type: 'null'
       x-examples:
-        gpt-neox-20b-response:
-          id: 3a2a2c16-8aed-4b05-84f5-4e46f233e889
-          createdAt: '2022-08-01T13:37:34.346Z'
-          updatedAt: '2022-08-01T13:37:34.346Z'
+        gpt-neox-20b-res:
+          id: fc19233e-528f-46cb-8c6c-9a51b706c8cf
+          createdAt: '2022-08-12T17:09:21.872Z'
+          updatedAt: '2022-08-12T17:09:22.335Z'
           status: completed
           category: text_completions
           model: gpt-neox-20b
@@ -1712,10 +1724,10 @@ components:
             top_k: 40
             top_p: 0.5
           choices:
-            error: false
-            results:
-              generated_text: |-
-                What is 18857 - 592?
-                18165
+            - error: false
+              results:
+                generated_text: '18264'
+                prompt_text: What is 18857 - 592?
+                elapsed_time: 0.12441420555114746
+                num_tokens_generated: 3
           error: null
-      title: ''
