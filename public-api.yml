@@ -1078,7 +1078,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/AITextCompletionResponse'
       description: Creates a text completion request for the provided prompt and paramete
       requestBody:
         content:
