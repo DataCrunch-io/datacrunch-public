@@ -1070,7 +1070,7 @@ paths:
   /ai/completions:
     parameters: []
     post:
-      summary: ''
+      summary: Send an AI text completion request
       operationId: post-ai-completions
       responses:
         '200':
@@ -1124,6 +1124,8 @@ paths:
                   temperature: 1.2
                   top_k: 40
                   top_p: 0.5
+      tags:
+        - AI
 components:
   securitySchemes:
     oauth2:
