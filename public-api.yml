@@ -1162,7 +1162,7 @@ paths:
                     error: Bad Request
         '401':
           description: Unauthorized
-      description: Creates a text completion request for the provided prompt and paramete
+      description: Creates a text completion request for the provided prompt and parameters
       requestBody:
         content:
           application/json:
