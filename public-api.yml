@@ -73,7 +73,7 @@ paths:
 
 
         The following images types are available:
-        `ubuntu-18.04`, `ubuntu-20.04`, `ubuntu-20.04-cuda-11.1`, `ubuntu-20.04-cuda-11.4`, `ubuntu-20.04-cuda-11.1-docker`, `ubuntu-20.04-cuda-11.4-docker`, `fastai`
+        `ubuntu-18.04`, `ubuntu-20.04`, `ubuntu-22.04`, `ubuntu-20.04-cuda-11.1`, `ubuntu-20.04-cuda-11.4`, `ubuntu-20.04-cuda-11.7`, `ubuntu-20.04-cuda-11.1-docker`, `ubuntu-20.04-cuda-11.4-docker`, `ubuntu-20.04-cuda-11.7-docker`, `fastai`
 
         Existing detached OS volumes could be used as an image, put the volume id as the image value.
 
