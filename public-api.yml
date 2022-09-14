@@ -1354,6 +1354,9 @@ components:
           required:
             - name
             - size
+        is_spot:
+          type: boolean
+          description: Should the instance be deployed as a spot instance
       required:
         - instance_type
         - image
