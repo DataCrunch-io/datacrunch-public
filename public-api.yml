@@ -77,6 +77,8 @@ paths:
 
         Existing detached OS volumes could be used as an image, put the volume id as the image value.
 
+        Coupons codes could be added with the `coupon` property.
+
         The following locations are availabe:
         `FIN1`
 
@@ -175,7 +177,7 @@ paths:
 
         Note: to `hibernate` an instance, you must first `shutdown` it. All instance volumes would be detached and the instance will be deleted.
 
-        Note: To remove an instance and stop charging your account, you must `delete` it. 
+        Important: To remove an instance and stop charging your account, you must `delete` it. 
         Using `shutdown` will keep charging your account.
 
         When deleting an instance, you can specify which of it's attached volumes will be deleted by providing `volume_ids` array. 
@@ -1309,6 +1311,7 @@ components:
             hostname: string
             description: string
             location: FIN1
+            coupon: FiftyPercentOff
             os_volume:
               name: OS Volume
               size: 100
@@ -1354,6 +1357,9 @@ components:
           required:
             - name
             - size
+        coupon:
+          type: string
+          description: a discount coupon code
       required:
         - instance_type
         - image
