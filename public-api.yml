@@ -1068,7 +1068,19 @@ paths:
           in: path
           description: The type of the instance to check
           required: true
+        - schema:
+            type: boolean
+          in: query
+          name: isSpot
+          description: Check if the given instance type is available for spot instance (true) or on-demand (false - default)
       summary: Check availability
+    parameters:
+      - schema:
+          type: string
+        name: instanceType
+        in: path
+        required: true
+        description: Instance type must be one of supported instance types
 components:
   securitySchemes:
     oauth2:
