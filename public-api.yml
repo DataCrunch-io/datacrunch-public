@@ -874,7 +874,7 @@ paths:
         Perform an action on a storage volume or multiple volumes
 
         > Available actions are: 
-        `attach`, `detach`, `delete`, `rename`, `increase-size`
+        `attach`, `detach`, `delete`, `rename`, `increase-size`, `restore`
 
         Note: to attach, detach or delete a volume, the target / attached instance should be shutdown
       requestBody:
