@@ -62,6 +62,9 @@ paths:
         Tesla V100:
         `8V100.48M`,`8V100.48V`,`4V100.20V`,`2V100.10V`,`1V100.6V`
 
+        RTX6000 Ada:
+        `8RTX6000ADA.80V`, `4RTX6000ADA.40V`, `2RTX6000ADA.20V`, `1RTX6000ADA.10V`
+
         RTX A6000:
         `8A6000.80V`, `4A6000.40V`, `2A6000.20V`, `1A6000.10V`
 
@@ -82,7 +85,7 @@ paths:
 
         Coupons codes could be added with the `coupon` property.
 
-        The following locations are availabe:
+        The following locations are available:
         `FIN1`
 
         You can also add a startup script, but it's an optional field.
@@ -1299,6 +1302,10 @@ components:
         - 4V100.20V
         - 2V100.10V
         - 1V100.6V
+        - 8RTX6000ADA.80V
+        - 4RTX6000ADA.40V
+        - 2RTX6000ADA.20V
+        - 1RTX6000ADA.10V
         - 8A6000.80V
         - 4A6000.40V
         - 2A6000.20V
