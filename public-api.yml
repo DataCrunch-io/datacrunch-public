@@ -88,6 +88,8 @@ paths:
         You can also add a startup script, but it's an optional field.
         It's also possible to define new volumes that will be created and attached to the new instance. New volumes location will be the same as the instance.
 
+        Existing detached volumes can be attached to the deployed server by adding their IDs in an array with the optional `existing_volumes` property.
+
         Instance hostname and description are mandatory.
       operationId: deployInstance
       requestBody:
@@ -1347,7 +1349,6 @@ components:
               - name: large-storage
                 size: 500
                 type: HDD
-      title: ''
       properties:
         instance_type:
           $ref: '#/components/schemas/InstanceType'
@@ -1388,6 +1389,10 @@ components:
         coupon:
           type: string
           description: a discount coupon code
+        existing_volumes:
+          $ref: '#/components/schemas/VolumeIds'
+          x-stoplight:
+            id: ollyqyojerp56
       required:
         - instance_type
         - image
