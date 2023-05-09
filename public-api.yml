@@ -879,9 +879,11 @@ paths:
         Perform an action on a storage volume or multiple volumes
 
         > Available actions are: 
-        `attach`, `detach`, `delete`, `rename`, `increase-size`, `restore`
+        `attach`, `detach`, `delete`, `rename`, `increase-size`, `restore`, `clone`
 
         Note: to attach, detach or delete a volume, the target / attached instance should be shutdown
+
+        When `clone`ing a volume, the `name` field is mandatory, and the `type` field is optional. For example, you may want to clone the volume from NVMe to HDD then `type` would be `HDD`.
       requestBody:
         content:
           application/json:
@@ -898,8 +900,11 @@ paths:
                   type: number
                 name:
                   type: string
+                  description: needed when cloning a volume
                 instance_id:
                   type: string
+                type:
+                  $ref: '#/components/schemas/VolumeType'
               required:
                 - id
                 - action
