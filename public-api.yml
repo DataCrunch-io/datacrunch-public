@@ -1082,6 +1082,12 @@ paths:
           in: query
           name: isSpot
           description: Check if the given instance type is available for spot instance (true) or on-demand (false - default)
+        - schema:
+            type: string
+            example: FIN-01
+          in: query
+          name: locationCode
+          description: Check for availability in a specific location
       summary: Check availability
     parameters:
       - schema:
@@ -1111,10 +1117,67 @@ paths:
                     - code: FIN-01
                       name: Finland 1
                       country_code: FI
-                    - code: ICE-01
-                      name: Iceland 1
-                      country_code: IS
       operationId: get-locations
+  /instance-availability:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: An array of all the available instance types for each location
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  x-stoplight:
+                    id: opvr0p6e420vy
+                  type: object
+              examples:
+                Availabilites:
+                  value:
+                    - location_code: FIN-01
+                      availabilities:
+                        - 8V100.48V
+                        - 4V100.20V
+                        - 2V100.10V
+                        - 1V100.6V
+                        - 8RTX6000ADA.80V
+                        - 4RTX6000ADA.40V
+                        - 2RTX6000ADA.20V
+                        - 1RTX6000ADA.10V
+                        - 8A6000.80V
+                        - 4A6000.40V
+                        - 2A6000.20V
+                        - 1A6000.10V
+                        - 8A100.176V
+                        - 4A100.88V
+                        - 2A100.44V
+                        - 1A100.22V
+                        - 8A100.40S.176V
+                        - 4A100.40S.88V
+                        - 2A100.40S.44V
+                        - 1A100.40S.22V
+                        - CPU.32V
+                        - CPU.16V
+                        - CPU.8V
+                        - CPU.4V
+        '401':
+          description: Unauthorized
+      operationId: get-instance-availability
+      description: Get all instance type availabilities for all locations
+      parameters:
+        - schema:
+            type: boolean
+          in: query
+          name: isSpot
+          description: Check if the given instance type is available for spot instance (true) or on-demand (false - default)
+        - schema:
+            type: string
+            example: FIN-01
+          in: query
+          name: locationCode
+          description: Check for availability in a specific location
 components:
   securitySchemes:
     oauth2:
