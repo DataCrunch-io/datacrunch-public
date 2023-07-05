@@ -83,7 +83,7 @@ paths:
         Existing detached OS volumes could be used as an image, put the volume id as the image value.
 
         The following locations are available:
-        `FIN1`
+        `FIN-01`
 
         It's also possible to define new volumes that will be created and attached to the new instance. New volumes location will be the same as the instance.
 
@@ -108,7 +108,7 @@ paths:
                   startup_script_id: 96ebbbd9-21a9-43cc-a146-6ce9cf59d2b2
                   hostname: UKKO-5
                   description: server for running lightning models
-                  location: FIN1
+                  location_code: FIN-01
               'deploy a single instance with multiple ssh keys, no startup script':
                 summary: 'deploy a single 1V100.6V instance with fastai image, with multiple ssh keys ids but no startup script id'
                 value:
@@ -119,7 +119,7 @@ paths:
                     - 0ceddf93-b719-448a-9622-22806f5b7c8a
                   hostname: OiUkkoYlijumala
                   description: test instance
-                  location: FIN1
+                  location_code: FIN-01
               deploy a single instance with an extra new volume:
                 value:
                   instance_type: 8V100.48M
@@ -128,7 +128,7 @@ paths:
                   startup_script_id: 26d43424-229e-4b45-bae2-86eb1e919514
                   hostname: UKKO-6
                   description: server for running lightning models
-                  location: FIN1
+                  location_code: FIN-01
                   volumes:
                     - name: main-storage
                       size: 200
@@ -141,7 +141,7 @@ paths:
                   startup_script_id: 26d43424-229e-4b45-bae2-86eb1e919514
                   hostname: string
                   description: string
-                  location: FIN1
+                  location_code: FIN-01
               deploy an instance with custom OS volume size and name:
                 value:
                   instance_type: 8V100.48M
@@ -150,7 +150,7 @@ paths:
                   startup_script_id: 26d43424-229e-4b45-bae2-86eb1e919514
                   hostname: string
                   description: string
-                  location: FIN1
+                  location_code: FIN-01
                   os_volume:
                     name: OS Volume
                     size: 150
@@ -832,7 +832,7 @@ paths:
                       name: Volume-nxC2tf9F
                       size: 50
                       type: NVMe
-                      location: FIN1
+                      location_code: FIN-01
                       is_os_volume: true
                       created_at: '2021-06-02T12:56:49.582Z'
                       target: vda
@@ -842,7 +842,7 @@ paths:
                       name: Volume-iHdL4ysR
                       size: 100
                       type: HDD
-                      location: FIN1
+                      location_code: FIN-01
                       is_os_volume: false
                       created_at: '2021-06-02T12:56:49.582Z'
                       target: null
@@ -967,7 +967,7 @@ paths:
                   size: 40
                   type: NVMe
                   instance_id: 06587974-2dbe-4e10-8bf9-38cce0f5a366
-                  location: FIN1
+                  location_code: FIN-01
         description: ''
   '/volumes/{volumeId}':
     parameters:
@@ -996,7 +996,7 @@ paths:
                     name: my-volume
                     size: 40
                     type: NVMe
-                    location: FIN1
+                    location_code: FIN-01
                     is_os_volume: true
                     created_at: '2019-08-24T14:15:22Z'
                     target: vda
@@ -1402,8 +1402,6 @@ components:
         description:
           type: string
           description: the instance description. free text
-        location:
-          $ref: '#/components/schemas/Location'
         volumes:
           $ref: '#/components/schemas/DeployVolumes'
         os_volume:
@@ -1424,25 +1422,24 @@ components:
           description: a discount coupon code
         existing_volumes:
           $ref: '#/components/schemas/VolumeIds'
-          x-stoplight:
-            id: ollyqyojerp56
+        location_code:
+          $ref: '#/components/schemas/Location'
       required:
         - instance_type
         - image
         - ssh_key_ids
         - hostname
         - description
-        - location
+        - location_code
     Location:
       type: string
-      title: Location
+      title: Location code
       description: Datacenter Location
-      default: FIN1
+      default: FIN-01
       x-examples:
-        Location example:
-          value: FIN1
+        Location example: FIN-01
       enum:
-        - FIN1
+        - FIN-01
     UserBalance:
       title: UserBalance
       type: object
@@ -1529,8 +1526,6 @@ components:
           minimum: 40
         type:
           $ref: '#/components/schemas/VolumeType'
-        location:
-          $ref: '#/components/schemas/Location'
         is_os_volume:
           type: boolean
         created_at:
@@ -1542,6 +1537,8 @@ components:
         ssh_key_ids:
           type: array
           items: {}
+        location_code:
+          $ref: '#/components/schemas/Location'
       required:
         - id
         - status
@@ -1549,8 +1546,8 @@ components:
         - name
         - size
         - type
-        - location
         - is_os_volume
+        - location_code
     VolumeId:
       type: string
       title: VolumeId
