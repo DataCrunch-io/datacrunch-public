@@ -1090,6 +1090,31 @@ paths:
         in: path
         required: true
         description: Instance type must be one of supported instance types
+  /locations:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  x-stoplight:
+                    id: v4blcueaxbabm
+                  type: object
+              examples:
+                Example 1:
+                  value:
+                    - code: FIN-01
+                      name: Finland 1
+                      country_code: FI
+                    - code: ICE-01
+                      name: Iceland 1
+                      country_code: IS
+      operationId: get-locations
 components:
   securitySchemes:
     oauth2:
