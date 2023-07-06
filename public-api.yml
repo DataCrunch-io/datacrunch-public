@@ -1433,7 +1433,7 @@ components:
             startup_script_id: 26d43424-229e-4b45-bae2-86eb1e919514
             hostname: string
             description: string
-            location: FIN1
+            location_code: FIN-01
             coupon: FiftyPercentOff
             os_volume:
               name: OS Volume
@@ -1557,7 +1557,7 @@ components:
             name: Volume-nxC2tf9F
             size: 50
             type: NVMe
-            location: FIN1
+            location_code: FIN-01
             is_os_volume: true
             created_at: '2021-06-02T12:56:49.582Z'
             target: vda
@@ -1569,7 +1569,7 @@ components:
             name: Volume-iHdL4ysR
             size: 100
             type: HDD
-            location: FIN1
+            location_code: FIN-01
             is_os_volume: false
             created_at: '2021-06-02T12:56:49.582Z'
             target: null
@@ -1661,7 +1661,7 @@ components:
               name: Volume-nxC2tf9F
               size: 50
               type: NVMe
-              location: FIN1
+              location_code: FIN-01
               is_os_volume: true
             - id: ea4edc62-9838-4b7c-bd5b-862f2efec675
               status: detached
@@ -1669,7 +1669,7 @@ components:
               name: Volume-iHdL4ysR
               size: 100
               type: HDD
-              location: FIN1
+              location_code: FIN-01
               is_os_volume: false
     DeployVolume:
       title: DeployVolume
