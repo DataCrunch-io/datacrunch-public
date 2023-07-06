@@ -1130,9 +1130,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LocationAvailabilities'
+                type: array
+                items:
+                  $ref: '#/components/schemas/LocationAvailabilities'
               examples:
-                Availabilites:
+                Example 1:
                   value:
                     - location_code: FIN-01
                       availabilities:
