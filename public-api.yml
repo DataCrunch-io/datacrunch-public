@@ -1098,8 +1098,9 @@ paths:
         description: Instance type must be one of supported instance types
   /locations:
     get:
-      summary: Your GET endpoint
-      tags: []
+      summary: Locations
+      tags:
+        - Locations
       responses:
         '200':
           description: OK
@@ -1120,8 +1121,9 @@ paths:
       operationId: get-locations
   /instance-availability:
     get:
-      summary: Your GET endpoint
-      tags: []
+      summary: Check all availability
+      tags:
+        - Instances
       responses:
         '200':
           description: An array of all the available instance types for each location
@@ -1164,7 +1166,7 @@ paths:
                         - CPU.4V
         '401':
           description: Unauthorized
-      operationId: get-instance-availability
+      operationId: getAllAvailability
       description: Get all instance type availabilities for all locations
       parameters:
         - schema:
