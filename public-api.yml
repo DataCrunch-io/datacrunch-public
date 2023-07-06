@@ -24,6 +24,7 @@ tags:
   - name: Images
   - name: Instance Types
   - name: Volumes
+  - name: Locations
 paths:
   /instances:
     get:
@@ -1098,30 +1099,31 @@ paths:
         description: Instance type must be one of supported instance types
   /locations:
     get:
-      summary: Your GET endpoint
-      tags: []
+      summary: Locations
+      tags:
+        - Locations
       responses:
         '200':
-          description: OK
+          description: An array of location objects
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  x-stoplight:
-                    id: v4blcueaxbabm
-                  type: object
+                  $ref: '#/components/schemas/Location'
               examples:
                 Example 1:
                   value:
                     - code: FIN-01
                       name: Finland 1
                       country_code: FI
-      operationId: get-locations
+      operationId: getLocations
+      description: Returns an array of all the available locations
   /instance-availability:
     get:
-      summary: Your GET endpoint
-      tags: []
+      summary: Check all availability
+      tags:
+        - Instances
       responses:
         '200':
           description: An array of all the available instance types for each location
@@ -1130,11 +1132,9 @@ paths:
               schema:
                 type: array
                 items:
-                  x-stoplight:
-                    id: opvr0p6e420vy
-                  type: object
+                  $ref: '#/components/schemas/LocationAvailabilities'
               examples:
-                Availabilites:
+                Example 1:
                   value:
                     - location_code: FIN-01
                       availabilities:
@@ -1164,7 +1164,7 @@ paths:
                         - CPU.4V
         '401':
           description: Unauthorized
-      operationId: get-instance-availability
+      operationId: getAllAvailability
       description: Get all instance type availabilities for all locations
       parameters:
         - schema:
@@ -1338,8 +1338,8 @@ components:
           type: string
         description:
           type: string
-        location:
-          $ref: '#/components/schemas/Location'
+        location_code:
+          $ref: '#/components/schemas/LocationCode'
         price_per_hour:
           type: number
         instance_type:
@@ -1486,7 +1486,7 @@ components:
         existing_volumes:
           $ref: '#/components/schemas/VolumeIds'
         location_code:
-          $ref: '#/components/schemas/Location'
+          $ref: '#/components/schemas/LocationCode'
       required:
         - instance_type
         - image
@@ -1494,7 +1494,7 @@ components:
         - hostname
         - description
         - location_code
-    Location:
+    LocationCode:
       type: string
       title: Location code
       description: Datacenter Location
@@ -1601,7 +1601,7 @@ components:
           type: array
           items: {}
         location_code:
-          $ref: '#/components/schemas/Location'
+          $ref: '#/components/schemas/LocationCode'
       required:
         - id
         - status
@@ -1699,8 +1699,8 @@ components:
         instance_id:
           type: string
           format: uuid
-        location:
-          $ref: '#/components/schemas/Location'
+        location_code:
+          $ref: '#/components/schemas/LocationCode'
       required:
         - name
         - size
@@ -1729,3 +1729,42 @@ components:
         HDD:
           value: HDD
       description: storage volume type
+    Location:
+      title: Location
+      type: object
+      properties:
+        code:
+          $ref: '#/components/schemas/LocationCode'
+        name:
+          type: string
+          x-stoplight:
+            id: 7ldhm5bpo41qt
+        country_code:
+          type: string
+          x-stoplight:
+            id: ao6k2b918cvi5
+      x-examples:
+        Example 1:
+          code: FIN-01
+          name: Finland 1
+          country_code: FI
+      description: An object describing a location
+    LocationAvailabilities:
+      title: LocationAvailabilities
+      x-stoplight:
+        id: ezt25d46bvfhq
+      type: object
+      properties:
+        location_code:
+          $ref: '#/components/schemas/LocationCode'
+        availabilites:
+          type: array
+          x-stoplight:
+            id: 0cjvxnexahjlx
+          items:
+            $ref: '#/components/schemas/InstanceType'
+      x-examples:
+        Example 1:
+          location_code: FIN-01
+          availabilites:
+            - 8V100.48M
