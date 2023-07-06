@@ -1104,7 +1104,7 @@ paths:
         - Locations
       responses:
         '200':
-          description: OK
+          description: An array of location objects
           content:
             application/json:
               schema:
@@ -1130,11 +1130,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  x-stoplight:
-                    id: opvr0p6e420vy
-                  type: object
+                $ref: '#/components/schemas/LocationAvailabilities'
               examples:
                 Availabilites:
                   value:
@@ -1751,3 +1747,22 @@ components:
           name: Finland 1
           country_code: FI
       description: An object describing a location
+    LocationAvailabilities:
+      title: LocationAvailabilities
+      x-stoplight:
+        id: ezt25d46bvfhq
+      type: object
+      properties:
+        location_code:
+          $ref: '#/components/schemas/LocationCode'
+        availabilites:
+          type: array
+          x-stoplight:
+            id: 0cjvxnexahjlx
+          items:
+            $ref: '#/components/schemas/InstanceType'
+      x-examples:
+        Example 1:
+          location_code: FIN-01
+          availabilites:
+            - 8V100.48M
