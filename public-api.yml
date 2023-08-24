@@ -1409,10 +1409,13 @@ components:
         - 4A100.40S.88V
         - 2A100.40S.44V
         - 1A100.40S.22V
-        - CPU.4V
-        - CPU.8V
-        - CPU.16V
-        - CPU.32V
+        - CPU.4V.16G
+        - CPU.8V.32G
+        - CPU.16V.64G
+        - CPU.32V.128G
+        - CPU.64V.256G
+        - CPU.96V.384G
+        - CPU.120V.480G
     Image:
       type: string
       description: the image type (operating system)
