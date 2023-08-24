@@ -76,7 +76,7 @@ paths:
         `8A100.40S.176V`, `4A100.40S.88V`, `2A100.40S.44V`, `1A100.40S.22V`
 
         CPU Nodes:
-        `CPU.32V`, `CPU.16V`, `CPU.8V`, `CPU.4V`
+        `CPU.120V.480G`, `CPU.96V.384G`, `CPU.64V.256G`, `CPU.32V.128G`, `CPU.16V.64G`, `CPU.8V.32G`, `CPU.4V.16G`
 
 
         Available images can be listed using the `GET /images` endpoint - using the `image_type` value from the result. 
