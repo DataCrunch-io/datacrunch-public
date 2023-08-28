@@ -84,7 +84,7 @@ paths:
         Existing detached OS volumes could be used as an image, put the volume id as the image value.
 
         The following locations are available:
-        `FIN-01`
+        `FIN-01` `ICE-01`
 
         It's also possible to define new volumes that will be created and attached to the new instance. New volumes location will be the same as the instance.
 
