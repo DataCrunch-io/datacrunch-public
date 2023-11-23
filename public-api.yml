@@ -1024,6 +1024,21 @@ paths:
         '404':
           description: Volume not found
       description: Delete a specific volume by id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                is_permanent:
+                  type: boolean
+                  x-stoplight:
+                    id: u5c6lcr1hfnn2
+                  description: delete volume permanently or not
+            examples:
+              Delete a volume permanently:
+                value:
+                  is_permanent: true
   /volume-types:
     get:
       summary: Get Volume Types
